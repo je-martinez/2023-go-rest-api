@@ -24,3 +24,10 @@ test:
 
 # ==============================================================================
 # Docker
+local:
+	echo "Starting local environment"
+	docker-compose -f docker-compose.local.yml up --build
+
+local-logs:
+	echo "Starting local environment"
+	docker-compose -f docker-compose.local.yml logs -f
