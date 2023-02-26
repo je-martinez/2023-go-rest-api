@@ -1,15 +1,47 @@
 version: "3.8"
 
 services:
-  crdb:
-    container_name: cockroach-db
+  crdb-1:
     image: cockroachdb/cockroach:latest
     ports:
-      - "26257:26257"
       - "8080:8080"
-    command: start-single-node --insecure
+      - "26257:26257"
     volumes:
-      - "${PWD}/.docker-volumes/cockroach-data/crdb:/data/cockroach/cockroach-data"
+      - crdb-1-data:/cockroach/cockroach-data
+    command: start --insecure --join=crdb-1,crdb-2,crdb-3
+    networks:
+      - web_api
+
+  crdb-2:
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - crdb-2-data:/cockroach/cockroach-data
+    command: start --insecure --join=crdb-1,crdb-2,crdb-3
+    networks:
+      - web_api
+
+  crdb-3:
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - crdb-3-data:/cockroach/cockroach-data
+    command: start --insecure --join=crdb-1,crdb-2,crdb-3
+    networks:
+      - web_api
+
+  crdb-runner:
+    image: cockroachdb/cockroach:latest
+    restart: on-failure
+    depends_on:
+      - crdb-1
+      - crdb-2
+      - crdb-3
+    volumes:
+      - ./entrypoints/db/sql-init.d:/docker-entrypoint-initdb.d
+      - ./entrypoints/db/init-data.sh:/usr/local/bin/init-data.sh:ro
+    command:
+      - "shell"
+      - "/usr/local/bin/init-data.sh"
+      - "crdb-1:26257"
     networks:
       - web_api
 
@@ -24,7 +56,7 @@ services:
       MINIO_ROOT_PASSWORD: admin.123
     command: server --console-address :9001 /data
     volumes:
-      - "${PWD}/.docker-volumes/minio/data:/data"
+      - minio-data:/data
     networks:
       - web_api
 
@@ -46,3 +78,8 @@ services:
 networks:
   web_api:
     driver: bridge
+volumes:
+  crdb-1-data:
+  crdb-2-data:
+  crdb-3-data:
+  minio-data:
