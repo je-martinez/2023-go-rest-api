@@ -3,13 +3,13 @@ version: "3.8"
 services:
   crdb:
     container_name: cockroach-db
-    image: cockroachdb/cockroach:v19.2.2
+    image: cockroachdb/cockroach:latest
     ports:
       - "26257:26257"
       - "8080:8080"
     command: start-single-node --insecure
     volumes:
-      - "${PWD}/.docker-volumes/cockroach-data/crdb:/cockroach/cockroach-data"
+      - "${PWD}/.docker-volumes/cockroach-data/crdb:/data/cockroach/cockroach-data"
     networks:
       - web_api
 
@@ -21,7 +21,7 @@ services:
     container_name: minio-storage
     environment:
       MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: admin123
+      MINIO_ROOT_PASSWORD: admin.123
     command: server --console-address :9001 /data
     volumes:
       - "${PWD}/.docker-volumes/minio/data:/data"
@@ -35,7 +35,7 @@ services:
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc config host rm local;
-      /usr/bin/mc config host add --quiet --api s3v4 local http://minio-storage:9000 admin admin123;
+      /usr/bin/mc config host add --quiet --api s3v4 local http://minio-storage:9000 admin admin.123;
       /usr/bin/mc rb --force local/2023-rest-api/;
       /usr/bin/mc mb --quiet local/2023-rest-api/;
       /usr/bin/mc policy set public local/2023-rest-api;
