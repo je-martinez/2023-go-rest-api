@@ -1,8 +1,8 @@
 package router
 
 import (
+	handler "main/api/v1/handlers"
 	routes "main/constants/routes"
-	handler "main/handlers"
 
 	"github.com/gin-gonic/gin"
 )
