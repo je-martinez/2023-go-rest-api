@@ -11,7 +11,7 @@ import (
 // App config struct
 type Config struct {
 	Server   ServerConfig
-	Postgres PostgresConfig
+	Database DatabaseConfig
 	Redis    RedisConfig
 	MongoDB  MongoDB
 	Cookie   Cookie
@@ -50,7 +50,7 @@ type Logger struct {
 }
 
 // Postgresql config
-type PostgresConfig struct {
+type DatabaseConfig struct {
 	PostgresqlHost     string
 	PostgresqlPort     string
 	PostgresqlUser     string

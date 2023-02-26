@@ -3,21 +3,17 @@ package server
 import (
 	router "main/api/v1/router"
 	"main/config"
+	types "main/pkg/types"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Server struct {
-	gin *gin.Engine
-	cfg *config.Config
-}
-
-func Start(cfg *config.Config) *Server {
+func Start(cfg *config.Config) *types.Server {
 	if !cfg.Server.Debug {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	s := &Server{gin: gin.New(), cfg: cfg}
-	router.Start(s.gin)
-	s.gin.Run(cfg.Server.Address)
-	return s
+	server := &types.Server{Gin: gin.New(), Config: cfg}
+	router.Start(server.Gin)
+	server.Gin.Run(cfg.Server.Address)
+	return server
 }

@@ -12,6 +12,7 @@ server:
   CtxDefaultTimeout: 12
   CSRF: true
   Debug: true
+  AutoMigration: false
 
 logger:
   Development: true
@@ -20,7 +21,7 @@ logger:
   Encoding: json
   Level: info
 
-postgres:
+database:
   PostgresqlHost: localhost
   PostgresqlPort: 5432
   PostgresqlUser: postgres
