@@ -5,7 +5,7 @@ import (
 	"main/config"
 	"main/pkg/logger"
 	"main/pkg/server"
-	"main/utils"
+	"main/pkg/utils"
 	"os"
 )
 

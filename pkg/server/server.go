@@ -1,8 +1,8 @@
 package server
 
 import (
+	router "main/api/v1/router"
 	"main/config"
-	router "main/pkg/router"
 
 	"github.com/gin-gonic/gin"
 )
