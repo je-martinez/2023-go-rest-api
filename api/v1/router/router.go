@@ -10,4 +10,5 @@ import (
 func Start(r *gin.Engine) {
 	//Internal Handlers
 	r.GET(routes.Health, handler.Health)
+	r.GET(routes.Metrics, handler.PrometheusHandler())
 }
