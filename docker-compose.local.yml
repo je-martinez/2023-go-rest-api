@@ -1,0 +1,84 @@
+version: "3.8"
+
+services:
+  crdb-1:
+    image: cockroachdb/cockroach:latest
+    ports:
+      - "8080:8080"
+      - "26257:26257"
+    volumes:
+      - crdb-1-data:/cockroach/cockroach-data
+    command: start --insecure --join=crdb-1,crdb-2,crdb-3
+    networks:
+      - web_api
+
+  crdb-2:
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - crdb-2-data:/cockroach/cockroach-data
+    command: start --insecure --join=crdb-1,crdb-2,crdb-3
+    networks:
+      - web_api
+
+  crdb-3:
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - crdb-3-data:/cockroach/cockroach-data
+    command: start --insecure --join=crdb-1,crdb-2,crdb-3
+    networks:
+      - web_api
+
+  crdb-runner:
+    image: cockroachdb/cockroach:latest
+    restart: on-failure
+    depends_on:
+      - crdb-1
+      - crdb-2
+      - crdb-3
+    volumes:
+      - ./entrypoints/db/sql-init.d:/docker-entrypoint-initdb.d
+      - ./entrypoints/db/init-data.sh:/usr/local/bin/init-data.sh:ro
+    command:
+      - "shell"
+      - "/usr/local/bin/init-data.sh"
+      - "crdb-1:26257"
+    networks:
+      - web_api
+
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    container_name: minio-storage
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin.123
+    command: server --console-address :9001 /data
+    volumes:
+      - minio-data:/data
+    networks:
+      - web_api
+
+  mc:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host rm local;
+      /usr/bin/mc config host add --quiet --api s3v4 local http://minio-storage:9000 admin admin.123;
+      /usr/bin/mc rb --force local/2023-rest-api/;
+      /usr/bin/mc mb --quiet local/2023-rest-api/;
+      /usr/bin/mc policy set public local/2023-rest-api;
+      "
+    networks:
+      - web_api
+networks:
+  web_api:
+    driver: bridge
+volumes:
+  crdb-1-data:
+  crdb-2-data:
+  crdb-3-data:
+  minio-data:
