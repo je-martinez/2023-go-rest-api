@@ -1,7 +1,7 @@
 server:
   AppVersion: 1.0.0
-  Address: "0.0.0.0:3000"
-  Port: :5000
+  Address: "0.0.0.0:4500"
+  Port: :4500
   PprofPort: :5555
   Mode: Development
   JwtSecretKey: secretkey

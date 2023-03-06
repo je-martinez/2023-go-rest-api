@@ -1,9 +1,14 @@
-FROM golang:alpine AS build
-WORKDIR /go/src/app
-COPY . .
-RUN go build -o /go/bin/app cmd/api/main.go
+FROM golang:alpine AS base
 
-FROM scratch
-COPY --from=build /go/bin/app /go/bin/app
-EXPOSE 3000
-ENTRYPOINT ["/go/bin/app"]
+WORKDIR /app
+COPY . .
+
+RUN go build -o ./cmd/api/server ./cmd/api/main.go
+
+FROM alpine AS final
+
+WORKDIR /app
+COPY --from=base /app/cmd/api/server ./cmd/api/
+COPY --from=base /app/config/config.yml ./config/
+
+CMD [ "./cmd/api/server" ]

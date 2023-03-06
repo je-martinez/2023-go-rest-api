@@ -125,7 +125,11 @@ func LoadConfig(filename string) (*viper.Viper, error) {
 	v := viper.New()
 
 	v.SetConfigName(filename)
+	v.SetConfigType("yml")
+	//For Local Environment
 	v.AddConfigPath(".")
+	//For Docker Images
+	v.AddConfigPath("/app/config")
 	v.AutomaticEnv()
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
