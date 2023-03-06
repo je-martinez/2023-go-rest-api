@@ -1,20 +1,16 @@
 package entities
 
-import (
-	"time"
-
-	"github.com/google/uuid"
-)
+import "time"
 
 type Profile struct {
-	ProfileId      uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	User           User
+	ProfileID      string `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	UserID         string
 	PhotosUploaded int64
 	VideosUploaded int64
 	AudiosUploaded int64
 	LikesCount     int64
 	LastPost       int64
-	UpdatedBy      User
-	UpdatedAt      time.Time
-	Active         bool
+	CreatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
+	UpdatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
+	Active         bool      `gorm:"default:true"`
 }
