@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"main/config"
+	e "main/pkg/database/entities"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -27,5 +28,6 @@ func Start(cfg *config.Config) *gorm.DB {
 	if err != nil {
 		log.Fatal("Unable to connect with database", db)
 	}
+	db.AutoMigrate(&e.User{})
 	return db
 }
