@@ -1,6 +1,14 @@
 version: "3.8"
 
 services:
+  api:
+    container_name: 2023-go-rest-api
+    build: .
+    ports:
+      - "4500:4500"
+    networks:
+      - web_api
+
   crdb-1:
     image: cockroachdb/cockroach:latest
     ports:

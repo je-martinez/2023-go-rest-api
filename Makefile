@@ -27,12 +27,12 @@ go-test:
 
 run:
 	echo "Starting local environment"
-	docker-compose -f docker-compose.local.yml up --build -d
+	docker-compose up --build -d
 
 stop:
 	echo "Removing local environment"
-	docker-compose -f docker-compose.local.yml down
+	docker-compose down
 
 logs:
 	echo "Starting local environment"
-	docker-compose -f docker-compose.local.yml logs -f
+	docker-compose logs -f
