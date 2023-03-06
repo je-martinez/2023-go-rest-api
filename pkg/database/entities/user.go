@@ -13,4 +13,6 @@ type User struct {
 	UpdatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
 	Active         bool      `gorm:"default:true"`
 	Profile        Profile
+	Posts          []Post
+	Comments       []Comment
 }

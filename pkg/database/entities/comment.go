@@ -2,17 +2,17 @@ package entities
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Comment struct {
-	CommentId uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	Post      Post
+	CommentID string `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	PostID    string
+	UserID    string
+	Content   string
+	CreatedBy string
+	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
+	UpdatedBy string
+	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
+	Active    bool      `gorm:"default:true"`
 	File      File
-	CreatedBy User
-	CreatedAt time.Time
-	UpdatedBy User
-	UpdatedAt time.Time
-	Active    bool
 }

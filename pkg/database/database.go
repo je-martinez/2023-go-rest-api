@@ -28,7 +28,7 @@ func Start(cfg *config.Config) *gorm.DB {
 	if err != nil {
 		log.Fatal("Unable to connect with database", db)
 	}
-	db.AutoMigrate(&e.User{})
-	db.AutoMigrate(&e.Profile{})
+	db.AutoMigrate(&e.User{}, &e.Profile{}, e.Post{}, e.Comment{}, e.File{})
+
 	return db
 }
