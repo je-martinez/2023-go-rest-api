@@ -23,12 +23,12 @@ logger:
 
 database:
   PostgresqlHost: localhost
-  PostgresqlPort: 5432
-  PostgresqlUser: postgres
-  PostgresqlPassword: postgres
-  PostgresqlDbname: auth_db
+  PostgresqlPort: 26257
+  PostgresqlUser: "root"
+  PostgresqlPassword: ""
+  PostgresqlDbname: main_db
   PostgresqlSslmode: false
-  PgDriver: pgx
+  Insecure: true
 
 redis:
   RedisAddr: localhost:6379

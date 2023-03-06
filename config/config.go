@@ -57,7 +57,7 @@ type DatabaseConfig struct {
 	PostgresqlPassword string
 	PostgresqlDbname   string
 	PostgresqlSSLMode  bool
-	PgDriver           string
+	Insecure           bool
 }
 
 // Redis config
