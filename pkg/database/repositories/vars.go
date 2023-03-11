@@ -1,3 +1,3 @@
 package repositories
 
-var AppUserRepository = new(UserRepository)
+var ApiUserRepository = new(UserRepository)

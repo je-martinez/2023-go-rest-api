@@ -10,7 +10,7 @@ type User struct {
 	PasswordHash   string
 	SignInProvider string
 	CreatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
-	UpdatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
+	UpdatedAt      time.Time `gorm:"default:null"`
 	Active         bool      `gorm:"default:true"`
 	Profile        Profile
 	Posts          []Post

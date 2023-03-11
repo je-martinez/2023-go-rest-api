@@ -11,6 +11,6 @@ type Profile struct {
 	LikesCount     int64
 	LastPost       int64
 	CreatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
-	UpdatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
+	UpdatedAt      time.Time `gorm:"default:null"`
 	Active         bool      `gorm:"default:true"`
 }

@@ -14,6 +14,6 @@ type File struct {
 	CreatedBy string
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
 	UpdatedBy string
-	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
+	UpdatedAt time.Time `gorm:"default:null"`
 	Active    bool      `gorm:"default:true"`
 }
