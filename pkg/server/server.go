@@ -4,23 +4,33 @@ import (
 	router "main/api/v1/router"
 	"main/config"
 	"main/pkg/database"
+	"main/pkg/logger"
 	types "main/pkg/types"
 
 	"github.com/gin-gonic/gin"
 )
 
-var server *types.Server
-
-func Server() *types.Server {
-	return server
-}
+var Server *types.Server
 
 func Start(cfg *config.Config) *types.Server {
+
+	appLogger := logger.NewApiLogger(cfg)
+
+	appLogger.InitLogger()
+	appLogger.Infof("AppVersion: %s, LogLevel: %s, Mode: %s, SSL: %v", cfg.Server.AppVersion, cfg.Logger.Level, cfg.Server.Mode, cfg.Server.SSL)
+
 	if !cfg.Server.Debug {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	server = &types.Server{Gin: gin.New(), Config: cfg, Database: database.Start(cfg)}
-	router.Start(server.Gin)
-	server.Gin.Run(cfg.Server.Address)
-	return server
+	Server = new(types.Server)
+
+	//Initialize Packages
+	Server.Gin = gin.New()
+	Server.Config = cfg
+	Server.Database = database.Start(cfg)
+
+	//Initialize Router And Run Server
+	router.Start(Server.Gin)
+	Server.Gin.Run(cfg.Server.Address)
+	return Server
 }

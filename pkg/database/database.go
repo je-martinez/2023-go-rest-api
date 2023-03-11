@@ -2,18 +2,28 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"main/config"
 	e "main/pkg/database/entities"
+	l "main/pkg/logger"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var Database *gorm.DB
 
-func DB() *gorm.DB {
-	return db
+func Start(cfg *config.Config) *gorm.DB {
+	database, err := gorm.Open(postgres.Open(getConnectionString(cfg)), &gorm.Config{})
+	if err != nil {
+		l.ApiLogger.Fatal("Unable to connect with database", err)
+	}
+	errAutoMigrate := database.AutoMigrate(&e.User{}, &e.Profile{}, e.Post{}, e.Comment{}, e.File{})
+	if errAutoMigrate != nil {
+		l.ApiLogger.Fatal("Unable to execute auto migrations", err)
+	}
+
+	Database = database
+	return database
 }
 
 func getConnectionString(cfg *config.Config) string {
@@ -27,18 +37,4 @@ func getConnectionString(cfg *config.Config) string {
 	}
 	cnx := fmt.Sprintf("postgresql://%s:%s/%s?sslmode=%s&user=%s&password=%s", db.PostgresqlHost, db.PostgresqlPort, db.PostgresqlDbname, ssl, db.PostgresqlUser, db.PostgresqlPassword)
 	return cnx
-}
-
-func Start(cfg *config.Config) *gorm.DB {
-	database, err := gorm.Open(postgres.Open(getConnectionString(cfg)), &gorm.Config{})
-	if err != nil {
-		log.Fatal("Unable to connect with database", err)
-	}
-	errAutoMigrate := db.AutoMigrate(&e.User{}, &e.Profile{}, e.Post{}, e.Comment{}, e.File{})
-	if errAutoMigrate != nil {
-		log.Fatal("Unable to execute auto migrations", err)
-	}
-
-	db = database
-	return database
 }
