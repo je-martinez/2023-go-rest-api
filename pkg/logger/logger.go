@@ -68,7 +68,7 @@ func (l *apiLogger) getLoggerLevel(cfg *config.Config) zapcore.Level {
 // Init logger
 func (l *apiLogger) InitLogger() {
 
-	if !loggerInitialized {
+	if loggerInitialized {
 		return
 	}
 
