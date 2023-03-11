@@ -3,15 +3,14 @@ package handlers
 import (
 	"net/http"
 
+	"main/pkg/utils"
+
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func Health(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"ok":     true,
-		"status": "Everything is okay!",
-	})
+	c.JSON(http.StatusOK, utils.SuccessApiResponse("Everything is okay", 200))
 }
 
 func PrometheusHandler() gin.HandlerFunc {
