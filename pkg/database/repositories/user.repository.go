@@ -4,6 +4,7 @@ import (
 	"errors"
 	db "main/pkg/database"
 	e "main/pkg/database/entities"
+	"main/pkg/types"
 	"time"
 
 	"gorm.io/gorm"
@@ -11,10 +12,16 @@ import (
 
 type UserRepository struct{}
 
-func (UserRepository) GetAll() (users *[]e.User, err error) {
+func (UserRepository) GetAll(params *types.QueryOptions) (users *[]e.User, err error) {
 	Rows := &[]e.User{}
 
-	operation := db.Database.Find(Rows)
+	var operation *gorm.DB
+
+	if params != nil {
+		operation = db.Database.Find(Rows).Offset(params.Pagination.Skip).Limit(params.Pagination.Take)
+	} else {
+		operation = db.Database.Find(Rows)
+	}
 
 	if err := operation.Error; err != nil && !errors.Is(err, gorm.ErrEmptySlice) {
 		return Rows, err
