@@ -10,6 +10,12 @@ import (
 	"gorm.io/gorm"
 )
 
+var db *gorm.DB
+
+func DB() *gorm.DB {
+	return db
+}
+
 func getConnectionString(cfg *config.Config) string {
 
 	db := cfg.Database
@@ -24,11 +30,15 @@ func getConnectionString(cfg *config.Config) string {
 }
 
 func Start(cfg *config.Config) *gorm.DB {
-	db, err := gorm.Open(postgres.Open(getConnectionString(cfg)), &gorm.Config{})
+	database, err := gorm.Open(postgres.Open(getConnectionString(cfg)), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Unable to connect with database", db)
+		log.Fatal("Unable to connect with database", err)
 	}
-	db.AutoMigrate(&e.User{}, &e.Profile{}, e.Post{}, e.Comment{}, e.File{})
+	errAutoMigrate := db.AutoMigrate(&e.User{}, &e.Profile{}, e.Post{}, e.Comment{}, e.File{})
+	if errAutoMigrate != nil {
+		log.Fatal("Unable to execute auto migrations", err)
+	}
 
-	return db
+	db = database
+	return database
 }
