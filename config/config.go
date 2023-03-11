@@ -5,6 +5,8 @@ import (
 	"log"
 	"time"
 
+	constants "main/pkg/constants"
+
 	"github.com/spf13/viper"
 )
 
@@ -133,7 +135,7 @@ func LoadConfig(filename string) (*viper.Viper, error) {
 	v.AutomaticEnv()
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			return nil, errors.New("config file not found")
+			return nil, errors.New(constants.CONFIG_NOT_FOUND_ERROR)
 		}
 		return nil, err
 	}
@@ -147,7 +149,7 @@ func ParseConfig(v *viper.Viper) (*Config, error) {
 
 	err := v.Unmarshal(&c)
 	if err != nil {
-		log.Printf("unable to decode into struct, %v", err)
+		log.Printf(constants.CONFIG_DECODE_ERROR, err)
 		return nil, err
 	}
 

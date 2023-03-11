@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"main/config"
+	constants "main/pkg/constants"
 	e "main/pkg/database/entities"
 	l "main/pkg/logger"
 
@@ -15,14 +16,14 @@ var Database *gorm.DB
 func Start(cfg *config.Config) *gorm.DB {
 	database, err := gorm.Open(postgres.Open(getConnectionString(cfg)), &gorm.Config{})
 	if err != nil {
-		l.ApiLogger.Fatal("Unable to connect with database", err)
+		l.ApiLogger.Fatal(constants.CONNECT_DB_ERROR, err)
 	}
 	errAutoMigrate := database.AutoMigrate(&e.User{}, &e.Profile{}, e.Post{}, e.Comment{}, e.File{})
 	if errAutoMigrate != nil {
-		l.ApiLogger.Fatal("Unable to execute auto migrations", err)
+		l.ApiLogger.Fatal(constants.DB_MIGRATION_ERROR, err)
 	}
-
 	Database = database
+	l.ApiLogger.Info(constants.DB_RUNNING)
 	return database
 }
 

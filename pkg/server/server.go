@@ -3,6 +3,7 @@ package server
 import (
 	router "main/api/v1/router"
 	"main/config"
+	constants "main/pkg/constants"
 	"main/pkg/database"
 	"main/pkg/logger"
 	types "main/pkg/types"
@@ -12,7 +13,7 @@ import (
 
 var Server *types.Server
 
-func Start(cfg *config.Config) *types.Server {
+func Start(cfg *config.Config) {
 
 	appLogger := logger.NewApiLogger(cfg)
 
@@ -31,6 +32,11 @@ func Start(cfg *config.Config) *types.Server {
 
 	//Initialize Router And Run Server
 	router.Start(Server.Gin)
-	Server.Gin.Run(cfg.Server.Address)
-	return Server
+	appLogger.Infof(constants.API_RUNNING, cfg.Server.Port)
+	err := Server.Gin.Run(cfg.Server.Address)
+
+	if err != nil {
+		appLogger.Fatalf(constants.API_RUNNING, err)
+	}
+
 }
