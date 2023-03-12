@@ -16,3 +16,37 @@ type User struct {
 	Posts          []Post
 	Comments       []Comment
 }
+
+type UserInput struct {
+	UserID         string
+	Username       string
+	Email          string
+	Fullname       string
+	PasswordHash   string
+	SignInProvider string
+	Active         bool
+}
+
+func (i User) ToEntity() (input UserInput) {
+	return UserInput{
+		UserID:         i.UserID,
+		Username:       i.Username,
+		Email:          i.Email,
+		Fullname:       i.Fullname,
+		PasswordHash:   i.PasswordHash,
+		SignInProvider: i.SignInProvider,
+		Active:         i.Active,
+	}
+}
+
+func (i User) FromEntity(entity UserInput) interface{} {
+	return User{
+		UserID:         entity.UserID,
+		Username:       entity.Username,
+		Email:          entity.Email,
+		Fullname:       entity.Fullname,
+		PasswordHash:   entity.PasswordHash,
+		SignInProvider: entity.SignInProvider,
+		Active:         entity.Active,
+	}
+}
