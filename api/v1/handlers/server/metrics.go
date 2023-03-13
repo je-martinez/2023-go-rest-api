@@ -1,4 +1,4 @@
-package handlers
+package server_handlers
 
 import (
 	"github.com/gin-gonic/gin"

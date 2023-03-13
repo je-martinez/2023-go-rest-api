@@ -1,4 +1,4 @@
-package routes
+package constants
 
 const (
 	Health  = "/api/v1/health"

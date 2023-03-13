@@ -1,8 +1,6 @@
-package handlers
+package server_handlers
 
 import (
-	"net/http"
-
 	"main/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +8,7 @@ import (
 )
 
 func Health(c *gin.Context) {
-	c.JSON(http.StatusOK, utils.SuccessApiResponse("Everything is okay", 200))
+	utils.GinApiResponse(c, 200, "Everything is okay!", "Hola")
 }
 
 func PrometheusHandler() gin.HandlerFunc {
