@@ -1,6 +1,9 @@
 package entities
 
-import "time"
+import (
+	dbe "main/pkg/database/extensions"
+	"time"
+)
 
 type User struct {
 	UserID         string `gorm:"type:uuid;primary_key;default:uuid_generate_v4();"`
@@ -8,27 +11,27 @@ type User struct {
 	Email          string `gorm:"unique"`
 	Fullname       string
 	PasswordHash   string
-	SignInProvider string
-	CreatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
-	UpdatedAt      time.Time `gorm:"default:null"`
-	Active         bool      `gorm:"default:true"`
+	SignInProvider dbe.SignInProviderType `gorm:"type:sign_in_provider_type"`
+	CreatedAt      time.Time              `gorm:"default:CURRENT_TIMESTAMP()"`
+	UpdatedAt      time.Time              `gorm:"default:null"`
+	Active         bool                   `gorm:"default:true"`
 	Profile        Profile
 	Posts          []Post
 	Comments       []Comment
 }
 
-type UserInput struct {
+type UserModel struct {
 	UserID         string
 	Username       string
 	Email          string
 	Fullname       string
 	PasswordHash   string
-	SignInProvider string
+	SignInProvider dbe.SignInProviderType
 	Active         bool
 }
 
-func (i User) ToEntity() (input UserInput) {
-	return UserInput{
+func (i User) ToEntity() (input UserModel) {
+	return UserModel{
 		UserID:         i.UserID,
 		Username:       i.Username,
 		Email:          i.Email,
@@ -39,7 +42,7 @@ func (i User) ToEntity() (input UserInput) {
 	}
 }
 
-func (i User) FromEntity(entity UserInput) interface{} {
+func (i User) FromEntity(entity UserModel) interface{} {
 	return User{
 		UserID:         entity.UserID,
 		Username:       entity.Username,

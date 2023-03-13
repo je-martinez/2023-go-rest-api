@@ -5,7 +5,7 @@ import (
 	"main/config"
 	constants "main/pkg/constants"
 	e "main/pkg/database/entities"
-	r "main/pkg/database/repositories"
+	r "main/pkg/database/repository"
 	l "main/pkg/logger"
 
 	"gorm.io/driver/postgres"
@@ -16,7 +16,7 @@ import (
 var Database *gorm.DB
 
 // Repositories Instance
-var UserRepository *r.GormRepository[e.User, e.UserInput]
+var UserRepository *r.GormRepository[e.User, e.UserModel]
 
 func Start(cfg *config.Config) *gorm.DB {
 	database, err := gorm.Open(postgres.Open(getConnectionString(cfg)), &gorm.Config{})
@@ -47,5 +47,5 @@ func getConnectionString(cfg *config.Config) string {
 }
 
 func initRepositories(database *gorm.DB) {
-	UserRepository = r.NewRepository[e.User, e.UserInput](database)
+	UserRepository = r.NewRepository[e.User, e.UserModel](database)
 }
