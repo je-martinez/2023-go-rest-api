@@ -8,7 +8,8 @@ import (
 )
 
 func Health(c *gin.Context) {
-	utils.GinApiResponse(c, 200, "Everything is okay!", "Hola")
+	utils.GinApiResponse(c, 200, "Everything is okay!", nil, nil)
+	return
 }
 
 func PrometheusHandler() gin.HandlerFunc {

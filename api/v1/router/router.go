@@ -1,6 +1,7 @@
 package router
 
 import (
+	auth_handlers "main/api/v1/handlers/auth"
 	sv_handlers "main/api/v1/handlers/server"
 	routes "main/pkg/constants"
 
@@ -12,6 +13,6 @@ func Start(r *gin.Engine) {
 	r.GET(routes.Health, sv_handlers.Health)
 	r.GET(routes.Metrics, sv_handlers.PrometheusHandler())
 
-	//
-
+	//Auth
+	r.POST(routes.RegisterUser, auth_handlers.RegisterUser)
 }
