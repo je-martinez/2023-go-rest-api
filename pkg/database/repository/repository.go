@@ -7,46 +7,45 @@ import (
 	"gorm.io/gorm"
 )
 
-type GormModel[E any] interface {
-	ToModel() E
-	FromModel(entity E) interface{}
+type GormModel[M any] interface {
+	ToModel() M
+	FromModel(entity M) interface{}
 }
 
-func NewRepository[M GormModel[E], E any](db *gorm.DB) *GormRepository[M, E] {
-	return &GormRepository[M, E]{
+func NewRepository[E GormModel[M], M any](db *gorm.DB) *GormRepository[E, M] {
+	return &GormRepository[E, M]{
 		db: db,
 	}
 }
 
-type GormRepository[M GormModel[E], E any] struct {
+type GormRepository[E GormModel[M], M any] struct {
 	db *gorm.DB
 }
 
-func (r *GormRepository[M, E]) Insert(ctx context.Context, entity *E) (*M, error) {
-	var start M
-	model := start.FromModel(*entity).(M)
+func (r *GormRepository[E, M]) Insert(ctx context.Context, db_model *M) (*E, error) {
+	var start E
+	entity := start.FromModel(*db_model).(E)
 
-	err := r.db.WithContext(ctx).Create(&model).Error
+	err := r.db.WithContext(ctx).Create(&entity).Error
 	if err != nil {
 		return nil, err
 	}
 
-	*entity = model.ToModel()
-	return &model, nil
+	return &entity, nil
 }
 
-func (r *GormRepository[M, E]) Delete(ctx context.Context, entity *E) error {
-	var start M
-	model := start.FromModel(*entity).(M)
-	err := r.db.WithContext(ctx).Delete(model).Error
+func (r *GormRepository[E, M]) Delete(ctx context.Context, db_model *M) error {
+	var start E
+	entity := start.FromModel(*db_model).(E)
+	err := r.db.WithContext(ctx).Delete(entity).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *GormRepository[M, E]) DeleteById(ctx context.Context, id any) error {
-	var start M
+func (r *GormRepository[E, M]) DeleteById(ctx context.Context, id any) error {
+	var start E
 	err := r.db.WithContext(ctx).Delete(&start, &id).Error
 	if err != nil {
 		return err
@@ -55,40 +54,39 @@ func (r *GormRepository[M, E]) DeleteById(ctx context.Context, id any) error {
 	return nil
 }
 
-func (r *GormRepository[M, E]) Update(ctx context.Context, entity *E) (*M, error) {
-	var start M
-	model := start.FromModel(*entity).(M)
+func (r *GormRepository[E, M]) Update(ctx context.Context, db_model *M) (*E, error) {
+	var start E
+	entity := start.FromModel(*db_model).(E)
 
-	err := r.db.WithContext(ctx).Save(&model).Error
+	err := r.db.WithContext(ctx).Save(&entity).Error
 	if err != nil {
 		return nil, err
 	}
 
-	*entity = model.ToModel()
-	return &model, nil
+	return &entity, nil
 }
 
-func (r *GormRepository[M, E]) FindByID(ctx context.Context, id any) (M, error) {
-	var model M
-	err := r.db.WithContext(ctx).First(&model, id).Error
+func (r *GormRepository[E, M]) FindByID(ctx context.Context, id any) (E, error) {
+	var entity E
+	err := r.db.WithContext(ctx).First(&entity, id).Error
 	if err != nil {
-		return *new(M), err
+		return *new(E), err
 	}
 
-	return model, nil
+	return entity, nil
 }
 
-func (r *GormRepository[M, E]) Find(ctx context.Context, specifications ...e.Specification) ([]E, error) {
+func (r *GormRepository[E, M]) Find(ctx context.Context, specifications ...e.Specification) ([]E, error) {
 	return r.FindWithLimit(ctx, -1, -1, specifications...)
 }
 
-func (r *GormRepository[M, E]) Count(ctx context.Context, specifications ...e.Specification) (i int64, err error) {
-	model := new(M)
+func (r *GormRepository[E, M]) Count(ctx context.Context, specifications ...e.Specification) (i int64, err error) {
+	model := new(E)
 	err = r.getPreWarmDbForSelect(ctx, specifications...).Model(model).Count(&i).Error
 	return
 }
 
-func (r *GormRepository[M, E]) getPreWarmDbForSelect(ctx context.Context, specification ...e.Specification) *gorm.DB {
+func (r *GormRepository[E, M]) getPreWarmDbForSelect(ctx context.Context, specification ...e.Specification) *gorm.DB {
 	dbPrewarm := r.db.WithContext(ctx)
 	for _, s := range specification {
 		dbPrewarm = dbPrewarm.Where(s.GetQuery(), s.GetValues()...)
@@ -96,24 +94,24 @@ func (r *GormRepository[M, E]) getPreWarmDbForSelect(ctx context.Context, specif
 	return dbPrewarm
 }
 
-func (r *GormRepository[M, E]) FindWithLimit(ctx context.Context, limit int, offset int, specifications ...e.Specification) ([]E, error) {
-	var models []M
+func (r *GormRepository[E, M]) FindWithLimit(ctx context.Context, limit int, offset int, specifications ...e.Specification) ([]E, error) {
+	var entities []E
 
 	dbPrewarm := r.getPreWarmDbForSelect(ctx, specifications...)
-	err := dbPrewarm.Limit(limit).Offset(offset).Find(&models).Error
+	err := dbPrewarm.Limit(limit).Offset(offset).Find(&entities).Error
 
 	if err != nil {
 		return nil, err
 	}
 
-	result := make([]E, 0, len(models))
-	for _, row := range models {
-		result = append(result, row.ToModel())
+	result := make([]E, 0, len(entities))
+	for _, row := range entities {
+		result = append(result, row)
 	}
 
 	return result, nil
 }
 
-func (r *GormRepository[M, E]) FindAll(ctx context.Context) ([]E, error) {
+func (r *GormRepository[E, M]) FindAll(ctx context.Context) ([]E, error) {
 	return r.FindWithLimit(ctx, -1, -1)
 }

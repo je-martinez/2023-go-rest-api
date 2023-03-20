@@ -2,7 +2,6 @@ package auth_handlers
 
 import (
 	"context"
-	"fmt"
 	"main/pkg/DTOs"
 	"main/pkg/database"
 	"main/pkg/utils"
@@ -32,7 +31,6 @@ func RegisterUser(c *gin.Context) {
 	passwordHash, _ := utils.GenerateHash(registerData.Password)
 	record, errInsert := database.UserRepository.Insert(ctx, registerData.ToModel(passwordHash))
 	if errInsert != nil {
-		fmt.Println(errInsert)
 		utils.GinApiResponse(c, 400, "Error Creating User", nil, errInsert.Error())
 		return
 	}
