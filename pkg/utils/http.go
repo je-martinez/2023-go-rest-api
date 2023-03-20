@@ -16,7 +16,7 @@ func GetConfigPath(configPath string) string {
 }
 
 func GinApiResponse(c *gin.Context, statusCode int, message string, data any, err any) {
-	c.JSON(http.StatusOK, apiResponse(200, message, data, err))
+	c.JSON(http.StatusOK, apiResponse(statusCode, message, data, err))
 }
 
 func apiResponse(statusCode int, message string, data any, err any) (response *types.ApiResponse) {
