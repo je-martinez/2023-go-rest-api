@@ -2,17 +2,21 @@ package utils
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/go-playground/validator/v10"
 )
 
-func ValidateStructErrors(err error) []string {
+type ErrorField struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
+}
+
+func ValidateStructErrors(err error) []ErrorField {
 	var ve validator.ValidationErrors
 	if errors.As(err, &ve) {
-		out := make([]string, len(ve))
+		out := make([]ErrorField, len(ve))
 		for i, fe := range ve {
-			out[i] = fmt.Sprintf("%s: %s", fe.Field(), msgForTag(fe))
+			out[i] = ErrorField{fe.Field(), msgForTag(fe)}
 		}
 		return out
 	}
