@@ -1,0 +1,12 @@
+## Register User
+
+@BaseURL=http://localhost:4500/api/v1
+
+PUT {{BaseURL}}/user/update
+Content-Type: application/json
+
+{
+    "user_id":"ab218165-076b-40b8-9d48-392d37548553",
+    "fullname":"Jose E. Martinez",
+    "email": "josemartinezchevez@gmail.com"
+}

@@ -7,10 +7,7 @@ import (
 	"main/pkg/utils"
 
 	"github.com/gin-gonic/gin"
-	v "github.com/go-playground/validator/v10"
 )
-
-var validate = v.New()
 
 func RegisterUser(c *gin.Context) {
 

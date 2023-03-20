@@ -22,3 +22,9 @@ func (data RegisterUserDTO) ToModel(passwordHash string) *entities.UserModel {
 		PasswordHash:   passwordHash,
 	}
 }
+
+type UpdateUserDTO struct {
+	UserId   string `json:"user_id" validate:"required"`
+	Fullname string `json:"fullname" validate:"required"`
+	Email    string `json:"email" validate:"email,required"`
+}
