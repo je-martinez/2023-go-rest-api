@@ -8,8 +8,8 @@ import (
 )
 
 type GormModel[E any] interface {
-	ToEntity() E
-	FromEntity(entity E) interface{}
+	ToModel() E
+	FromModel(entity E) interface{}
 }
 
 func NewRepository[M GormModel[E], E any](db *gorm.DB) *GormRepository[M, E] {
@@ -24,20 +24,20 @@ type GormRepository[M GormModel[E], E any] struct {
 
 func (r *GormRepository[M, E]) Insert(ctx context.Context, entity *E) (*M, error) {
 	var start M
-	model := start.FromEntity(*entity).(M)
+	model := start.FromModel(*entity).(M)
 
 	err := r.db.WithContext(ctx).Create(&model).Error
 	if err != nil {
 		return nil, err
 	}
 
-	*entity = model.ToEntity()
+	*entity = model.ToModel()
 	return &model, nil
 }
 
 func (r *GormRepository[M, E]) Delete(ctx context.Context, entity *E) error {
 	var start M
-	model := start.FromEntity(*entity).(M)
+	model := start.FromModel(*entity).(M)
 	err := r.db.WithContext(ctx).Delete(model).Error
 	if err != nil {
 		return err
@@ -57,14 +57,14 @@ func (r *GormRepository[M, E]) DeleteById(ctx context.Context, id any) error {
 
 func (r *GormRepository[M, E]) Update(ctx context.Context, entity *E) (*M, error) {
 	var start M
-	model := start.FromEntity(*entity).(M)
+	model := start.FromModel(*entity).(M)
 
 	err := r.db.WithContext(ctx).Save(&model).Error
 	if err != nil {
 		return nil, err
 	}
 
-	*entity = model.ToEntity()
+	*entity = model.ToModel()
 	return &model, nil
 }
 
@@ -108,7 +108,7 @@ func (r *GormRepository[M, E]) FindWithLimit(ctx context.Context, limit int, off
 
 	result := make([]E, 0, len(models))
 	for _, row := range models {
-		result = append(result, row.ToEntity())
+		result = append(result, row.ToModel())
 	}
 
 	return result, nil

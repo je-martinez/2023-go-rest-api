@@ -36,5 +36,5 @@ func RegisterUser(c *gin.Context) {
 		utils.GinApiResponse(c, 400, "Error Creating User", nil, errInsert.Error())
 		return
 	}
-	utils.GinApiResponse(c, 200, "New User Created!", record.ToEntity(), nil)
+	utils.GinApiResponse(c, 200, "User Created!", record.ToModel(), nil)
 }
