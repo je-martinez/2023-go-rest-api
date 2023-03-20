@@ -5,5 +5,5 @@ type ApiResponse struct {
 	StatusCode int         `json:"status_code"`
 	Message    string      `json:"message"`
 	Data       interface{} `json:"data"`
-	Error      interface{} `json:"error"`
+	Errors     interface{} `json:"errors"`
 }

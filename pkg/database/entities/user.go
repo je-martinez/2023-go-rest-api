@@ -21,13 +21,13 @@ type User struct {
 }
 
 type UserModel struct {
-	UserID         string
-	Username       string
-	Email          string
-	Fullname       string
-	PasswordHash   string
-	SignInProvider dbe.SignInProviderType
-	Active         bool
+	UserID         string                 `json:"user_id"`
+	Username       string                 `json:"username"`
+	Email          string                 `json:"email"`
+	Fullname       string                 `json:"fullname"`
+	PasswordHash   string                 `json:"password"`
+	SignInProvider dbe.SignInProviderType `json:"sign_in_provider"`
+	Active         bool                   `json:"active"`
 }
 
 func (i User) ToEntity() (input UserModel) {

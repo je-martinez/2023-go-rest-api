@@ -6,11 +6,11 @@ import (
 )
 
 type RegisterUserDTO struct {
-	Username string               `json:"username"`
-	Fullname string               `json:"fullname"`
-	Email    string               `json:"email"`
-	Provider t.SignInProviderType `json:"provider"`
-	Password string               `json:"password"`
+	Username string               `json:"username" validate:"required"`
+	Fullname string               `json:"fullname" validate:"required"`
+	Email    string               `json:"email" validate:"email,required"`
+	Provider t.SignInProviderType `json:"provider" validate:"required"`
+	Password string               `json:"password" validate:"required"`
 }
 
 func (data RegisterUserDTO) ToModel(passwordHash string) *entities.UserModel {

@@ -22,17 +22,17 @@ type GormRepository[M GormModel[E], E any] struct {
 	db *gorm.DB
 }
 
-func (r *GormRepository[M, E]) Insert(ctx context.Context, entity *E) error {
+func (r *GormRepository[M, E]) Insert(ctx context.Context, entity *E) (*M, error) {
 	var start M
 	model := start.FromEntity(*entity).(M)
 
 	err := r.db.WithContext(ctx).Create(&model).Error
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	*entity = model.ToEntity()
-	return nil
+	return &model, nil
 }
 
 func (r *GormRepository[M, E]) Delete(ctx context.Context, entity *E) error {
@@ -55,27 +55,27 @@ func (r *GormRepository[M, E]) DeleteById(ctx context.Context, id any) error {
 	return nil
 }
 
-func (r *GormRepository[M, E]) Update(ctx context.Context, entity *E) error {
+func (r *GormRepository[M, E]) Update(ctx context.Context, entity *E) (*M, error) {
 	var start M
 	model := start.FromEntity(*entity).(M)
 
 	err := r.db.WithContext(ctx).Save(&model).Error
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	*entity = model.ToEntity()
-	return nil
+	return &model, nil
 }
 
-func (r *GormRepository[M, E]) FindByID(ctx context.Context, id any) (E, error) {
+func (r *GormRepository[M, E]) FindByID(ctx context.Context, id any) (M, error) {
 	var model M
 	err := r.db.WithContext(ctx).First(&model, id).Error
 	if err != nil {
-		return *new(E), err
+		return *new(M), err
 	}
 
-	return model.ToEntity(), nil
+	return model, nil
 }
 
 func (r *GormRepository[M, E]) Find(ctx context.Context, specifications ...e.Specification) ([]E, error) {

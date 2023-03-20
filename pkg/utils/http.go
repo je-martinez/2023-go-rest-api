@@ -26,7 +26,7 @@ func apiResponse(statusCode int, message string, data any, err any) (response *t
 		StatusCode: statusCode,
 		Message:    message,
 		Data:       data,
-		Error:      err,
+		Errors:     err,
 	}
 }
 
