@@ -20,7 +20,7 @@ type User struct {
 	Comments       []Comment
 }
 
-type UserModel struct {
+type UserGorm struct {
 	UserID         string                 `json:"user_id"`
 	Username       string                 `json:"username"`
 	Email          string                 `json:"email"`
@@ -30,8 +30,8 @@ type UserModel struct {
 	Active         bool                   `json:"active"`
 }
 
-func (i User) ToEntity() (input UserModel) {
-	return UserModel{
+func (i User) ToEntity() (input UserGorm) {
+	return UserGorm{
 		UserID:         i.UserID,
 		Username:       i.Username,
 		Email:          i.Email,
@@ -42,7 +42,7 @@ func (i User) ToEntity() (input UserModel) {
 	}
 }
 
-func (i User) FromEntity(entity UserModel) interface{} {
+func (i User) FromEntity(entity UserGorm) interface{} {
 	return User{
 		UserID:         entity.UserID,
 		Username:       entity.Username,
