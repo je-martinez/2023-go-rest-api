@@ -13,8 +13,8 @@ type RegisterUserDTO struct {
 	Password string               `json:"password" validate:"required"`
 }
 
-func (data RegisterUserDTO) ToModel(passwordHash string) *entities.UserModel {
-	return &entities.UserModel{
+func (data RegisterUserDTO) ToEntity(passwordHash string) *entities.User {
+	return &entities.User{
 		Username:       data.Username,
 		Fullname:       data.Fullname,
 		Email:          data.Email,

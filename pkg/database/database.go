@@ -5,7 +5,7 @@ import (
 	"main/config"
 	constants "main/pkg/constants"
 	e "main/pkg/database/entities"
-	r "main/pkg/database/repository"
+	"main/pkg/database/repository"
 	l "main/pkg/logger"
 
 	"gorm.io/driver/postgres"
@@ -16,7 +16,9 @@ import (
 var Database *gorm.DB
 
 // Repositories Instance
-var UserRepository *r.GormRepository[e.User, e.UserModel]
+
+type ABC struct {
+}
 
 func Start(cfg *config.Config) *gorm.DB {
 	database, err := gorm.Open(postgres.Open(getConnectionString(cfg)), &gorm.Config{})
@@ -27,8 +29,8 @@ func Start(cfg *config.Config) *gorm.DB {
 	if errAutoMigrate != nil {
 		l.ApiLogger.Fatal(constants.DB_MIGRATION_ERROR, err)
 	}
-	Database = database
 	initRepositories(database)
+	Database = database
 	l.ApiLogger.Info(constants.DB_RUNNING)
 	return database
 }
@@ -46,6 +48,6 @@ func getConnectionString(cfg *config.Config) string {
 	return cnx
 }
 
-func initRepositories(database *gorm.DB) {
-	UserRepository = r.NewRepository[e.User, e.UserModel](database)
+func initRepositories(db *gorm.DB) {
+	UserRepository = repository.NewRepository[e.User](db)
 }

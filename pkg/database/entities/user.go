@@ -20,18 +20,18 @@ type User struct {
 	Comments       []Comment
 }
 
-type UserModel struct {
+type UserDTO struct {
 	UserID         string                 `json:"user_id"`
 	Username       string                 `json:"username"`
 	Email          string                 `json:"email"`
 	Fullname       string                 `json:"fullname"`
-	PasswordHash   string                 `json:"password"`
+	PasswordHash   string                 `json:"-"`
 	SignInProvider dbe.SignInProviderType `json:"sign_in_provider"`
 	Active         bool                   `json:"active"`
 }
 
-func (i User) ToModel() (input UserModel) {
-	return UserModel{
+func (i User) ToDTO() (input UserDTO) {
+	return UserDTO{
 		UserID:         i.UserID,
 		Username:       i.Username,
 		Email:          i.Email,
@@ -42,14 +42,14 @@ func (i User) ToModel() (input UserModel) {
 	}
 }
 
-func (i User) FromModel(entity UserModel) interface{} {
+func (i User) FromModel(model UserDTO) interface{} {
 	return User{
-		UserID:         entity.UserID,
-		Username:       entity.Username,
-		Email:          entity.Email,
-		Fullname:       entity.Fullname,
-		PasswordHash:   entity.PasswordHash,
-		SignInProvider: entity.SignInProvider,
-		Active:         entity.Active,
+		UserID:         model.UserID,
+		Username:       model.Username,
+		Email:          model.Email,
+		Fullname:       model.Fullname,
+		PasswordHash:   model.PasswordHash,
+		SignInProvider: model.SignInProvider,
+		Active:         model.Active,
 	}
 }

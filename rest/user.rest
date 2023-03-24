@@ -6,7 +6,7 @@ PUT {{BaseURL}}/user/update
 Content-Type: application/json
 
 {
-    "user_id":"ab218165-076b-40b8-9d48-392d37548553",
+    "user_id":"4935f9f9-4c44-4eea-b9e8-a217914d01b5",
     "fullname":"Jose E. Martinez",
     "email": "josemartinezchevez@gmail.com"
 }
