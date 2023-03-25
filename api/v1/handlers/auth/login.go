@@ -47,7 +47,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	responseData := &DTOs.LoginResponseDTO{
+	responseData := &DTOs.AuthResponseDTO{
 		Username: foundUser.Username,
 		Fullname: foundUser.Fullname,
 		Email:    foundUser.Email,

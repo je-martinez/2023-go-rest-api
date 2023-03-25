@@ -10,7 +10,7 @@ type LoginDTO struct {
 	Password string `json:"password" validate:"required"`
 }
 
-type LoginResponseDTO struct {
+type AuthResponseDTO struct {
 	Username string               `json:"username"`
 	Fullname string               `json:"fullname"`
 	Email    string               `json:"email"`
