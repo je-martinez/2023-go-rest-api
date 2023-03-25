@@ -18,3 +18,18 @@ func (p *SignInProviderType) Scan(value interface{}) error {
 func (p SignInProviderType) Value() (driver.Value, error) {
 	return string(p), nil
 }
+
+const (
+	LIKE = "like"
+)
+
+type ReactionType string
+
+func (p *ReactionType) Scan(value interface{}) error {
+	*p = ReactionType(value.([]byte))
+	return nil
+}
+
+func (p ReactionType) Value() (driver.Value, error) {
+	return string(p), nil
+}
