@@ -6,8 +6,8 @@ import (
 )
 
 type Reaction struct {
-	ReactionID   string `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
-	ReactionType dbe.ReactionType
+	ReactionID   string           `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	ReactionType dbe.ReactionType `gorm:"type:reaction_type"`
 	PostId       string
 	CommentId    string
 	UserId       string
