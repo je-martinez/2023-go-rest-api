@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"main/config"
 	"main/pkg/database/entities"
 	"time"
 
@@ -18,8 +19,8 @@ func GenerateToken(user entities.User) (token string, err error) {
 	}
 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claimsMap)
-
-	tokenString, err := jwtToken.SignedString([]byte("secret-key"))
+	SECRET_KEY := config.AppConfig.Server.JwtSecretKey
+	tokenString, err := jwtToken.SignedString([]byte(SECRET_KEY))
 	if err != nil {
 		return "", err
 	}

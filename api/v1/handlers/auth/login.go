@@ -37,9 +37,20 @@ func Login(c *gin.Context) {
 
 	if !isPasswordValid {
 		utils.GinApiResponse(c, 401, "Username or password are invalid", nil, nil)
+		return
 	}
 
-	// token, err := utils.GenerateToken(*foundUser)
+	token, err := utils.GenerateToken(*foundUser)
 
-	utils.GinApiResponse(c, 200, "", nil, nil)
+	if err != nil {
+		utils.GinApiResponse(c, 500, "Error trying to generate a new access token", nil, nil)
+		return
+	}
+
+	responseData := &DTOs.LoginResponse{
+		Token: token,
+	}
+
+	utils.GinApiResponse(c, 200, "", responseData, nil)
+	return
 }

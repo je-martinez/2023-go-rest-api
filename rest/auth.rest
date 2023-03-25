@@ -1,6 +1,16 @@
-## Register User
+### Login User
 
 @BaseURL=http://localhost:4500/api/v1
+
+POST {{BaseURL}}/auth/login
+Content-Type: application/json
+
+{
+    "username":"je-martinez",
+    "password": "testing-pass"   
+}
+
+### Register User
 
 POST {{BaseURL}}/auth/register
 Content-Type: application/json

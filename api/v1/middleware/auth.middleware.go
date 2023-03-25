@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"main/config"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +11,7 @@ import (
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		SECRET_KEY := "Holis"
+		SECRET_KEY := config.AppConfig.Server.JwtSecretKey
 		tokenString := c.GetHeader("Authorization")
 
 		if tokenString == "" {

@@ -31,4 +31,5 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 	utils.GinApiResponse(c, 200, "User Created!", newRecord.ToDTO(), nil)
+	return
 }
