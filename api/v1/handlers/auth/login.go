@@ -47,8 +47,12 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	responseData := &DTOs.LoginResponse{
-		Token: token,
+	responseData := &DTOs.LoginResponseDTO{
+		Username: foundUser.Username,
+		Fullname: foundUser.Fullname,
+		Email:    foundUser.Email,
+		Provider: foundUser.SignInProvider,
+		Token:    token,
 	}
 
 	utils.GinApiResponse(c, 200, "", responseData, nil)
