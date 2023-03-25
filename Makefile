@@ -13,14 +13,26 @@ swaggo:
 # ==============================================================================
 # Main
 
-run:
+go-run:
 	go run ./cmd/api/main.go
 
-build:
+go-build:
 	go build ./cmd/api/main.go
 
-test:
+go-test:
 	go test -cover ./...
 
 # ==============================================================================
 # Docker
+
+run:
+	echo "Starting local environment"
+	docker-compose -f docker-compose.local.yml up --build -d
+
+stop:
+	echo "Removing local environment"
+	docker-compose -f docker-compose.local.yml down -v
+
+logs:
+	echo "Starting local environment"
+	docker-compose -f docker-compose.local.yml logs -f

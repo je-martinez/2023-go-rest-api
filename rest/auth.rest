@@ -1,0 +1,14 @@
+## Register User
+
+@BaseURL=http://localhost:4500/api/v1
+
+POST {{BaseURL}}/auth/register
+Content-Type: application/json
+
+{
+    "username":"je-martinez",
+    "fullname":"Jose E. Martinez",
+    "email": "josemartinezchevez@gmail.com",
+    "provider": "email",
+    "password": "testing-pass"   
+}

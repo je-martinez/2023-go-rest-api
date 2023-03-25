@@ -1,0 +1,7 @@
+## Register User
+
+//Base URL
+@BaseURL=http://localhost:4500/api/v1
+
+GET {{BaseURL}}/health
+Content-Type: application/json
