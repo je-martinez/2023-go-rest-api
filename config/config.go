@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"log"
+	"os"
 	"time"
 
 	constants "main/pkg/constants"
@@ -10,19 +11,17 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Config Variables
+var AppConfig *Config
+
 // App config struct
 type Config struct {
 	Server   ServerConfig
 	Database DatabaseConfig
 	Redis    RedisConfig
-	MongoDB  MongoDB
-	Cookie   Cookie
-	Store    Store
-	Session  Session
 	Metrics  Metrics
 	Logger   Logger
 	AWS      AWS
-	Jaeger   Jaeger
 }
 
 // Server config struct
@@ -33,7 +32,6 @@ type ServerConfig struct {
 	PprofPort         string
 	Mode              string
 	JwtSecretKey      string
-	CookieName        string
 	ReadTimeout       time.Duration
 	WriteTimeout      time.Duration
 	SSL               bool
@@ -75,35 +73,10 @@ type RedisConfig struct {
 	DB             int
 }
 
-// MongoDB config
-type MongoDB struct {
-	MongoURI string
-}
-
-// Cookie config
-type Cookie struct {
-	Name     string
-	MaxAge   int
-	Secure   bool
-	HTTPOnly bool
-}
-
-// Session config
-type Session struct {
-	Prefix string
-	Name   string
-	Expire int
-}
-
 // Metrics config
 type Metrics struct {
 	URL         string
 	ServiceName string
-}
-
-// Store config
-type Store struct {
-	ImagesFolder string
 }
 
 // AWS S3
@@ -113,13 +86,6 @@ type AWS struct {
 	MinioSecretKey string
 	UseSSL         bool
 	MinioEndpoint  string
-}
-
-// AWS S3
-type Jaeger struct {
-	Host        string
-	ServiceName string
-	LogSpans    bool
 }
 
 // Load config file from given path
@@ -154,4 +120,26 @@ func ParseConfig(v *viper.Viper) (*Config, error) {
 	}
 
 	return &c, nil
+}
+
+func getConfigPath(configPath string) string {
+	if configPath == "" {
+		return "./config/config"
+	}
+	return configPath
+}
+
+func InitConfig() *Config {
+	configPath := getConfigPath(os.Getenv("config"))
+	cfgFile, err := LoadConfig(configPath)
+	if err != nil {
+		log.Fatalf(constants.LOADING_CONFIG_ERROR, err)
+	}
+
+	cfg, err := ParseConfig(cfgFile)
+	AppConfig = cfg
+	if err != nil {
+		log.Fatalf(constants.PARSING_CONFIG_ERROR, err)
+	}
+	return AppConfig
 }

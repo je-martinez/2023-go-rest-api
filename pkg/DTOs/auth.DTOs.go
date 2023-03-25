@@ -5,6 +5,15 @@ import (
 	t "main/pkg/database/extensions"
 )
 
+type LoginDTO struct {
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+type LoginResponse struct {
+	Token string `json:"token"`
+}
+
 type RegisterUserDTO struct {
 	Username string               `json:"username" validate:"required"`
 	Fullname string               `json:"fullname" validate:"required"`

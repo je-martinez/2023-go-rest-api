@@ -7,14 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Get config path for local or docker
-func GetConfigPath(configPath string) string {
-	if configPath == "" {
-		return "./config/config"
-	}
-	return configPath
-}
-
 func GinApiResponse(c *gin.Context, statusCode int, message string, data any, err any) {
 	c.JSON(http.StatusOK, apiResponse(statusCode, message, data, err))
 }
