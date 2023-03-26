@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"main/config"
+	"main/pkg/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,10 +13,10 @@ import (
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		SECRET_KEY := config.AppConfig.Server.JwtSecretKey
-		tokenString := c.GetHeader("Authorization")
+		tokenString := utils.ExtractToken(c)
 
 		if tokenString == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 			c.Abort()
 			return
 		}
@@ -31,7 +32,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		})
 
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 			c.Abort()
 			return
 		}
@@ -39,7 +40,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 			c.Next()
 		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 			c.Abort()
 		}
 	}

@@ -15,6 +15,7 @@ func Start(r *gin.Engine) {
 
 	//Internal Handlers
 	r.GET(routes.Health, sv_handlers.Health)
+	r.GET(routes.HealthAuth, middleware.AuthMiddleware(), sv_handlers.Health)
 	r.GET(routes.Metrics, sv_handlers.PrometheusHandler())
 
 	//Auth
