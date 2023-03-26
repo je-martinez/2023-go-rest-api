@@ -13,16 +13,27 @@ import (
 
 func Start(r *gin.Engine) {
 
-	//Internal Handlers
-	r.GET(routes.Health, sv_handlers.Health)
-	r.GET(routes.HealthAuth, middleware.AuthMiddleware(), sv_handlers.Health)
-	r.GET(routes.Metrics, sv_handlers.PrometheusHandler())
+	publicPath := "/api/v1/public"
+	protectedRelativePath := "/api/v1"
 
-	//Auth
-	r.POST(routes.Login, auth_handlers.Login)
-	r.POST(routes.RegisterUser, auth_handlers.RegisterUser)
+	//Router Groups
+	GinPublic := r.Group(publicPath)
+	{
+		//Auth
+		GinPublic.POST(routes.Login, auth_handlers.Login)
+		GinPublic.POST(routes.RegisterUser, auth_handlers.RegisterUser)
 
-	//User
-	r.PUT(routes.UpdateUser, middleware.AuthMiddleware(), user_handlers.UpdateUser)
+		//Server
+		GinPublic.GET(routes.HealthAuth, sv_handlers.Health)
+		GinPublic.GET(routes.Metrics, sv_handlers.PrometheusHandler())
+	}
 
+	GinProtected := r.Group(protectedRelativePath, middleware.AuthMiddleware())
+	{
+		//User
+		GinProtected.PUT(routes.UpdateUser, user_handlers.UpdateUser)
+
+		//Server
+		GinProtected.GET(routes.HealthAuth, sv_handlers.Health)
+	}
 }
