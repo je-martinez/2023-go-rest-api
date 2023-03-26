@@ -26,10 +26,10 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	query := entities.User{UserID: updateData.UserId}
-	userFind, errUserFind := database.UserRepository.Find(query)
+	userFind, errUserFind, notfound := database.UserRepository.Find(query)
 
 	if errUserFind != nil {
-		if utils.EntityNotFound(errUserFind) {
+		if notfound {
 			utils.GinApiResponse(c, 404, fmt.Sprintf("User not found with id: %s", updateData.UserId), nil, nil)
 			return
 		}

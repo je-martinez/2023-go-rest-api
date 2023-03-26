@@ -1,7 +1,16 @@
-## Register User
+### Health
 
 //Base URL
 @BaseURL=http://localhost:4500/api/v1
 
 GET {{BaseURL}}/health
 Content-Type: application/json
+
+
+### Health with Authentication
+
+@Token=abc
+
+GET {{BaseURL}}/health-with-auth
+Content-Type: application/json
+Authorization: Bearer {{Token}}

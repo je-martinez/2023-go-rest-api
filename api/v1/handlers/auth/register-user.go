@@ -30,5 +30,22 @@ func RegisterUser(c *gin.Context) {
 		utils.GinApiResponse(c, 400, "Error Creating User", nil, []string{errInsert.Error()})
 		return
 	}
-	utils.GinApiResponse(c, 200, "User Created!", newRecord.ToDTO(), nil)
+
+	token, err := utils.GenerateToken(*newRecord)
+
+	if err != nil {
+		utils.GinApiResponse(c, 500, "Error trying to generate a new access token", nil, nil)
+		return
+	}
+
+	responseData := &DTOs.AuthResponseDTO{
+		Username: newRecord.Username,
+		Fullname: newRecord.Fullname,
+		Email:    newRecord.Email,
+		Provider: newRecord.SignInProvider,
+		Token:    token,
+	}
+
+	utils.GinApiResponse(c, 200, "", responseData, nil)
+	return
 }

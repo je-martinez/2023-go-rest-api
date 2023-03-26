@@ -1,6 +1,14 @@
 version: "3.8"
 
 services:
+  redis:
+    image: redis:6.0.9-alpine
+    container_name: api_redis
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - web_api
   crdb-1:
     image: cockroachdb/cockroach:latest
     ports:

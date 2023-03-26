@@ -1,6 +1,10 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"errors"
+
+	"gorm.io/gorm"
+)
 
 type GormRepository[T any] struct {
 	db            *gorm.DB
@@ -33,13 +37,13 @@ func (r *GormRepository[T]) FindByStringID(id string, preloads ...string) (*T, e
 	return &entity, nil
 }
 
-func (r *GormRepository[T]) Find(query T, preloads ...string) (*T, error) {
+func (r *GormRepository[T]) Find(query T, preloads ...string) (*T, error, bool) {
 	var entity T
 	err := r.DBWithPreloads(preloads).Where(query).First(&entity).Error
 	if err != nil {
-		return nil, err
+		return nil, err, errors.Is(err, gorm.ErrRecordNotFound)
 	}
-	return &entity, nil
+	return &entity, nil, false
 }
 
 func (r *GormRepository[T]) Update(entity *T) error {
