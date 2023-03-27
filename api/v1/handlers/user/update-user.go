@@ -48,7 +48,7 @@ func UpdateUser(c *gin.Context) {
 	errMsg, newPasswordHash, hasErr := handlerPasswordChange(updateData.OldPassword, updateData.NewPassword, userFind.PasswordHash)
 
 	if hasErr {
-		utils.GinApiResponse(c, 500, errMsg, nil, nil)
+		utils.GinApiResponse(c, 400, errMsg, nil, nil)
 		return
 	}
 
