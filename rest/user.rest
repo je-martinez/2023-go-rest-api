@@ -1,4 +1,4 @@
-## Update User
+### Update User
 
 @BaseURL=http://localhost:4500/api/v1
 @Token=abc
@@ -13,3 +13,9 @@ Authorization: Bearer {{Token}}
     "old_password":"testing-pass",
     "new_password":"hola.1234"
 }
+
+### Retireve use's information
+
+GET {{BaseURL}}/user/me
+Content-Type: application/json
+Authorization: Bearer {{Token}}

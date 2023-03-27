@@ -31,6 +31,7 @@ func Start(r *gin.Engine) {
 	GinProtected := r.Group(protectedRelativePath, middleware.AuthMiddleware())
 	{
 		//User
+		GinProtected.GET(routes.Me, user_handlers.Me)
 		GinProtected.PUT(routes.UpdateUser, user_handlers.UpdateUser)
 
 		//Server

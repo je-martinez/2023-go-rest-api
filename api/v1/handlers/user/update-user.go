@@ -41,7 +41,7 @@ func UpdateUser(c *gin.Context) {
 			utils.GinApiResponse(c, 404, fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND_ID, "User", currentUser.UserID), nil, nil)
 			return
 		}
-		utils.GinApiResponse(c, 500, errUserFind.Error(), nil, nil)
+		utils.GinApiResponse(c, 500, fmt.Sprintf(constants.ERR_FIND_ENTITY, "User"), nil, nil)
 		return
 	}
 

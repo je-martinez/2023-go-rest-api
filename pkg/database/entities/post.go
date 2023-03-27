@@ -15,6 +15,6 @@ type Post struct {
 	UpdatedBy     string
 	UpdatedAt     time.Time `gorm:"default:null"`
 	Active        bool      `gorm:"default:true"`
-	Comments      []Comment
-	Files         []File
+	Comments      *[]Comment
+	Files         *[]File
 }
