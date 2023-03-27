@@ -61,7 +61,7 @@ func UpdateUser(c *gin.Context) {
 	_, errUpdate := database.UserRepository.Update(userFind)
 
 	if errUpdate != nil {
-		utils.GinApiResponse(c, 500, constants.ERR_UPDATE_ENTITY, nil, []string{errUpdate.Error()})
+		utils.GinApiResponse(c, 500, fmt.Sprintf(constants.ERR_UPDATE_ENTITY, "User"), nil, []string{errUpdate.Error()})
 		return
 	}
 
@@ -72,22 +72,22 @@ func UpdateUser(c *gin.Context) {
 func handlerPasswordChange(oldPassword string, newPassword string, hash string) (string, string, bool) {
 	if oldPassword == "" || newPassword == "" {
 		//Ignoring password change
-		return "", "", true
+		return "", "", false
 	}
 
 	isOldPasswordValid := utils.CheckPasswordHash(oldPassword, hash)
 
 	if !isOldPasswordValid {
 		//Error old password is incorrect
-		return constants.ERR_OLD_PASSWORD_MISMATCH, "", false
+		return constants.ERR_OLD_PASSWORD_MISMATCH, "", true
 	}
 
 	newPasswordHash, errHash := utils.GenerateHash(newPassword)
 
 	if errHash != nil {
 		//Error generating hash
-		return fmt.Sprintf(constants.ERR_GENERATE_HASH, "password"), "", false
+		return fmt.Sprintf(constants.ERR_GENERATE_HASH, "password"), "", true
 	}
 
-	return "", newPasswordHash, true
+	return "", newPasswordHash, false
 }
