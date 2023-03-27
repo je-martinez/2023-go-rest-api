@@ -27,7 +27,6 @@ type UserDTO struct {
 	Fullname       string                 `json:"fullname"`
 	PasswordHash   string                 `json:"-"`
 	SignInProvider dbe.SignInProviderType `json:"sign_in_provider"`
-	Active         bool                   `json:"active"`
 }
 
 func (i User) ToDTO() (input UserDTO) {
@@ -38,11 +37,10 @@ func (i User) ToDTO() (input UserDTO) {
 		Fullname:       i.Fullname,
 		PasswordHash:   i.PasswordHash,
 		SignInProvider: i.SignInProvider,
-		Active:         i.Active,
 	}
 }
 
-func (i User) FromModel(model UserDTO) interface{} {
+func (i User) FromDTO(model UserDTO) User {
 	return User{
 		UserID:         model.UserID,
 		Username:       model.Username,
@@ -50,6 +48,5 @@ func (i User) FromModel(model UserDTO) interface{} {
 		Fullname:       model.Fullname,
 		PasswordHash:   model.PasswordHash,
 		SignInProvider: model.SignInProvider,
-		Active:         model.Active,
 	}
 }

@@ -1,6 +1,7 @@
 package server_handlers
 
 import (
+	"main/pkg/constants"
 	"main/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -8,7 +9,7 @@ import (
 )
 
 func Health(c *gin.Context) {
-	utils.GinApiResponse(c, 200, "Everything is okay!", nil, nil)
+	utils.GinApiResponse(c, 200, constants.MSG_HEALTH, nil, nil)
 	return
 }
 

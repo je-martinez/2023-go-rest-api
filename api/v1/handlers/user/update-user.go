@@ -3,6 +3,7 @@ package user_handlers
 import (
 	"fmt"
 	"main/pkg/DTOs"
+	"main/pkg/constants"
 	"main/pkg/database"
 	"main/pkg/database/entities"
 	"main/pkg/utils"
@@ -15,28 +16,78 @@ func UpdateUser(c *gin.Context) {
 	var updateData DTOs.UpdateUserDTO
 	err := c.BindJSON(&updateData)
 	if err != nil {
-		utils.GinApiResponse(c, 400, "Error binding JSON", nil, []string{err.Error()})
+		utils.GinApiResponse(c, 400, constants.ERR_BIND_JSON, nil, []string{err.Error()})
 		return
 	}
 
 	err = validate.Struct(updateData)
 	if err != nil {
-		utils.GinApiResponse(c, 400, "Error with the provided JSON", nil, utils.ValidateStructErrors(err))
+		utils.GinApiResponse(c, 400, constants.ERR_INVALID_JSON, nil, utils.ValidateStructErrors(err))
 		return
 	}
 
-	query := entities.User{UserID: updateData.UserId}
-	userFind, errUserFind, notfound := database.UserRepository.Find(query)
+	currentUser, errCurrentUser := utils.ExtractUserFromToken(c)
+
+	if errCurrentUser != nil || currentUser == nil {
+		utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, utils.ValidateStructErrors(errCurrentUser))
+		return
+	}
+
+	query := entities.User{UserID: currentUser.UserID}
+	userFind, notfound, errUserFind := database.UserRepository.Find(query)
 
 	if errUserFind != nil {
 		if notfound {
-			utils.GinApiResponse(c, 404, fmt.Sprintf("User not found with id: %s", updateData.UserId), nil, nil)
+			utils.GinApiResponse(c, 404, fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND_ID, "User", currentUser.UserID), nil, nil)
 			return
 		}
 		utils.GinApiResponse(c, 500, errUserFind.Error(), nil, nil)
 		return
 	}
 
+	errMsg, newPasswordHash, hasErr := handlerPasswordChange(updateData.OldPassword, updateData.NewPassword, userFind.PasswordHash)
+
+	if hasErr {
+		utils.GinApiResponse(c, 400, errMsg, nil, nil)
+		return
+	}
+
+	if newPasswordHash != "" {
+		userFind.PasswordHash = newPasswordHash
+	}
+	userFind.Fullname = updateData.Fullname
+	userFind.Email = updateData.Email
+
+	_, errUpdate := database.UserRepository.Update(userFind)
+
+	if errUpdate != nil {
+		utils.GinApiResponse(c, 500, fmt.Sprintf(constants.ERR_UPDATE_ENTITY, "User"), nil, []string{errUpdate.Error()})
+		return
+	}
+
 	utils.GinApiResponse(c, 200, "", userFind.ToDTO(), nil)
 	return
+}
+
+func handlerPasswordChange(oldPassword string, newPassword string, hash string) (string, string, bool) {
+	if oldPassword == "" || newPassword == "" {
+		//Ignoring password change
+		return "", "", false
+	}
+
+	isOldPasswordValid := utils.CheckPasswordHash(oldPassword, hash)
+
+	if !isOldPasswordValid {
+		//Error old password is incorrect
+		return constants.ERR_OLD_PASSWORD_MISMATCH, "", true
+	}
+
+	newPasswordHash, errHash := utils.GenerateHash(newPassword)
+
+	if errHash != nil {
+		//Error generating hash
+		return fmt.Sprintf(constants.ERR_GENERATE_HASH, "password"), "", true
+	}
+
+	return "", newPasswordHash, false
 }

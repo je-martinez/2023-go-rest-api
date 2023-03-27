@@ -2,12 +2,12 @@ package constants
 
 const (
 	//Server
-	Health     = "/api/v1/health"
-	HealthAuth = "/api/v1/health-with-auth"
-	Metrics    = "/api/v1/metrics"
+	Health     = "/health"
+	HealthAuth = "/health-with-auth"
+	Metrics    = "/metrics"
 	//Auth
-	Login        = "api/v1/auth/login"
-	RegisterUser = "api/v1/auth/register"
+	Login        = "/auth/login"
+	RegisterUser = "/auth/register"
 	//User
-	UpdateUser = "api/v1/user/update"
+	UpdateUser = "/user/update"
 )

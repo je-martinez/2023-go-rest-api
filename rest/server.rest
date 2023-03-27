@@ -3,7 +3,7 @@
 //Base URL
 @BaseURL=http://localhost:4500/api/v1
 
-GET {{BaseURL}}/health
+GET {{BaseURL}}/public/health
 Content-Type: application/json
 
 

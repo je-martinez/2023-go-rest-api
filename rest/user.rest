@@ -1,12 +1,15 @@
-## Register User
+## Update User
 
 @BaseURL=http://localhost:4500/api/v1
+@Token=abc
 
 PUT {{BaseURL}}/user/update
 Content-Type: application/json
+Authorization: Bearer {{Token}}
 
 {
-    "user_id":"4935f9f9-4c44-4eea-b9e8-a217914d01b5",
-    "fullname":"Jose E. Martinez",
-    "email": "josemartinezchevez@gmail.com"
+    "fullname":"Jose Elias Martinez",
+    "email": "josemartinezchevez@gmail.com",
+    "old_password":"testing-pass",
+    "new_password":"hola.1234"
 }
