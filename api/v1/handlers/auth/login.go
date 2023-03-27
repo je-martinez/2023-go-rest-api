@@ -26,7 +26,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	foundUser, err, notFound := database.UserRepository.Find(entities.User{Username: loginData.Username})
+	foundUser, notFound, err := database.UserRepository.Find(entities.User{Username: loginData.Username})
 
 	if err != nil {
 		if notFound {

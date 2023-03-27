@@ -34,7 +34,7 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	query := entities.User{UserID: currentUser.UserID}
-	userFind, errUserFind, notfound := database.UserRepository.Find(query)
+	userFind, notfound, errUserFind := database.UserRepository.Find(query)
 
 	if errUserFind != nil {
 		if notfound {
@@ -45,6 +45,49 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	errMsg, newPasswordHash, hasErr := handlerPasswordChange(updateData.OldPassword, updateData.NewPassword, userFind.PasswordHash)
+
+	if hasErr {
+		utils.GinApiResponse(c, 500, errMsg, nil, nil)
+		return
+	}
+
+	if newPasswordHash != "" {
+		userFind.PasswordHash = newPasswordHash
+	}
+	userFind.Fullname = updateData.Fullname
+	userFind.Email = updateData.Email
+
+	_, errUpdate := database.UserRepository.Update(userFind)
+
+	if errUpdate != nil {
+		utils.GinApiResponse(c, 500, constants.ERR_UPDATE_ENTITY, nil, []string{errUpdate.Error()})
+		return
+	}
+
 	utils.GinApiResponse(c, 200, "", userFind.ToDTO(), nil)
 	return
+}
+
+func handlerPasswordChange(oldPassword string, newPassword string, hash string) (string, string, bool) {
+	if oldPassword == "" || newPassword == "" {
+		//Ignoring password change
+		return "", "", true
+	}
+
+	isOldPasswordValid := utils.CheckPasswordHash(oldPassword, hash)
+
+	if !isOldPasswordValid {
+		//Error old password is incorrect
+		return constants.ERR_OLD_PASSWORD_MISMATCH, "", false
+	}
+
+	newPasswordHash, errHash := utils.GenerateHash(newPassword)
+
+	if errHash != nil {
+		//Error generating hash
+		return fmt.Sprintf(constants.ERR_GENERATE_HASH, "password"), "", false
+	}
+
+	return "", newPasswordHash, true
 }

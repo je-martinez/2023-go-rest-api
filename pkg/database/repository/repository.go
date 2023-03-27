@@ -19,39 +19,41 @@ func (r *GormRepository[T]) Create(entity *T) error {
 	return r.db.Create(entity).Error
 }
 
-func (r *GormRepository[T]) FindByID(id uint, preloads ...string) (*T, error) {
+func (r *GormRepository[T]) FindByID(id uint, preloads ...string) (*T, bool, error) {
 	var entity T
 	err := r.DBWithPreloads(preloads).First(&entity, id).Error
 	if err != nil {
-		return nil, err
+		return nil, errors.Is(err, gorm.ErrRecordNotFound), err
 	}
-	return &entity, nil
+	return &entity, false, nil
 }
 
-func (r *GormRepository[T]) FindByStringID(id string, preloads ...string) (*T, error) {
+func (r *GormRepository[T]) FindByStringID(id string, preloads ...string) (*T, bool, error) {
 	var entity T
 	err := r.DBWithPreloads(preloads).First(&entity, "id = ?", id).Error
 	if err != nil {
-		return nil, err
+		return nil, errors.Is(err, gorm.ErrRecordNotFound), err
 	}
-	return &entity, nil
+	return &entity, false, nil
 }
 
-func (r *GormRepository[T]) Find(query T, preloads ...string) (*T, error, bool) {
+func (r *GormRepository[T]) Find(query T, preloads ...string) (*T, bool, error) {
 	var entity T
 	err := r.DBWithPreloads(preloads).Where(query).First(&entity).Error
 	if err != nil {
-		return nil, err, errors.Is(err, gorm.ErrRecordNotFound)
+		return nil, errors.Is(err, gorm.ErrRecordNotFound), err
 	}
-	return &entity, nil, false
+	return &entity, false, nil
 }
 
-func (r *GormRepository[T]) Update(entity *T) error {
-	return r.db.Save(entity).Error
+func (r *GormRepository[T]) Update(entity *T) (bool, error) {
+	err := r.db.Save(entity).Error
+	return errors.Is(err, gorm.ErrRecordNotFound), err
 }
 
-func (r *GormRepository[T]) Delete(entity *T) error {
-	return r.db.Delete(entity).Error
+func (r *GormRepository[T]) Delete(entity *T) (bool, error) {
+	err := r.db.Delete(entity).Error
+	return errors.Is(err, gorm.ErrRecordNotFound), err
 }
 
 func (r *GormRepository[T]) DBWithPreloads(preloads []string) *gorm.DB {
