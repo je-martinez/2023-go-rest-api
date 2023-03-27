@@ -15,7 +15,7 @@ type Profile struct {
 	CreatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
 	UpdatedAt      time.Time `gorm:"default:null"`
 	Active         bool      `gorm:"default:true"`
-	LastPost       Post      `gorm:"foreignKey:LastPostID"`
+	LastPost       *Post     `gorm:"foreignKey:LastPostID"`
 }
 
 type ProfileDTO struct {
@@ -26,8 +26,8 @@ type ProfileDTO struct {
 	AudiosUploaded int64  `json:"audios_uploaded"`
 }
 
-func (i Profile) ToDTO() (input ProfileDTO) {
-	return ProfileDTO{
+func (i Profile) ToDTO() (input *ProfileDTO) {
+	return &ProfileDTO{
 		ProfileID:      i.ProfileID,
 		UserID:         i.UserID,
 		PhotosUploaded: i.PhotosUploaded,

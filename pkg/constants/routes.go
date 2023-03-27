@@ -9,5 +9,6 @@ const (
 	Login        = "/auth/login"
 	RegisterUser = "/auth/register"
 	//User
+	Me         = "/user/me"
 	UpdateUser = "/user/update"
 )

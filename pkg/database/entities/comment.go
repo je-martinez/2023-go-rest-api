@@ -14,5 +14,5 @@ type Comment struct {
 	UpdatedBy string
 	UpdatedAt time.Time `gorm:"default:null"`
 	Active    bool      `gorm:"default:true"`
-	File      File
+	File      *File
 }
