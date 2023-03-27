@@ -9,5 +9,7 @@ Authorization: Bearer {{Token}}
 
 {
     "fullname":"Jose Elias Martinez",
-    "email": "josemartinezchevez@gmail.com"
+    "email": "josemartinezchevez@gmail.com",
+    "old_password":"testing-pass",
+    "new_password":"hola.1234"
 }
