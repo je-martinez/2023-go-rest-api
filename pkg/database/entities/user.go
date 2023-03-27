@@ -42,7 +42,7 @@ func (i User) ToDTO() (input UserDTO) {
 	}
 }
 
-func (i User) FromModel(model UserDTO) interface{} {
+func (i User) FromDTO(model UserDTO) User {
 	return User{
 		UserID:         model.UserID,
 		Username:       model.Username,

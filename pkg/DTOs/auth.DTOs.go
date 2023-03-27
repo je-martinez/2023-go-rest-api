@@ -33,6 +33,11 @@ func (r RegisterUserDTO) ToEntity(passwordHash string) *entities.User {
 		Email:          r.Email,
 		SignInProvider: r.Provider,
 		PasswordHash:   passwordHash,
+		Profile: entities.Profile{
+			PhotosUploaded: 0,
+			VideosUploaded: 0,
+			AudiosUploaded: 0,
+		},
 	}
 }
 
