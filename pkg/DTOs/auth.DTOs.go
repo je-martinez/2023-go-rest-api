@@ -37,7 +37,8 @@ func (r RegisterUserDTO) ToEntity(passwordHash string) *entities.User {
 }
 
 type UpdateUserDTO struct {
-	UserId   string `json:"user_id" validate:"required"`
-	Fullname string `json:"fullname" validate:"required"`
-	Email    string `json:"email" validate:"email,required"`
+	Fullname    string `json:"fullname" validate:"required"`
+	Email       string `json:"email" validate:"email,required"`
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
 }
