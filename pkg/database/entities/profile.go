@@ -35,13 +35,3 @@ func (i Profile) ToDTO() (input *ProfileDTO) {
 		AudiosUploaded: i.AudiosUploaded,
 	}
 }
-
-func (i Profile) FromDTO(model ProfileDTO) Profile {
-	return Profile{
-		ProfileID:      i.ProfileID,
-		UserID:         i.UserID,
-		PhotosUploaded: i.PhotosUploaded,
-		VideosUploaded: i.VideosUploaded,
-		AudiosUploaded: i.AudiosUploaded,
-	}
-}

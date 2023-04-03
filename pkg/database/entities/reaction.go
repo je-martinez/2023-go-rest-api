@@ -17,3 +17,21 @@ type Reaction struct {
 	UpdatedAt    time.Time `gorm:"default:null"`
 	Active       bool      `gorm:"default:true"`
 }
+
+type ReactionDTO struct {
+	ReactionID   string
+	ReactionType dbe.ReactionType
+	PostId       string
+	CommentId    string
+	UserId       string
+}
+
+func (i Reaction) ToDTO() *ReactionDTO {
+	return &ReactionDTO{
+		ReactionID:   i.ReactionID,
+		ReactionType: i.ReactionType,
+		PostId:       i.PostId,
+		CommentId:    i.CommentId,
+		UserId:       i.UserId,
+	}
+}

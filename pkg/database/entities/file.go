@@ -17,3 +17,22 @@ type File struct {
 	UpdatedAt time.Time `gorm:"default:null"`
 	Active    bool      `gorm:"default:true"`
 }
+
+type FileDTO struct {
+	FileID    string
+	PostId    string
+	CommentId string
+	Name      string
+	Path      string
+	MimeType  string
+}
+
+func (i File) ToDTO() *FileDTO {
+	return &FileDTO{
+		FileID:    i.FileID,
+		PostId:    i.PostId,
+		CommentId: i.CommentId,
+		Name:      i.Name,
+		MimeType:  i.MimeType,
+	}
+}

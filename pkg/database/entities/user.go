@@ -16,8 +16,8 @@ type User struct {
 	UpdatedAt      time.Time              `gorm:"default:null"`
 	Active         bool                   `gorm:"default:true"`
 	Profile        *Profile
-	Posts          *[]Post
-	Comments       *[]Comment
+	Posts          []Post
+	Comments       []Comment
 }
 
 type UserDTO struct {
@@ -28,13 +28,29 @@ type UserDTO struct {
 	PasswordHash   string                 `json:"-"`
 	SignInProvider dbe.SignInProviderType `json:"sign_in_provider"`
 	Profile        *ProfileDTO            `json:"profile"`
+	Posts          []PostDTO
+	Comments       []CommentDTO
 }
 
 func (i User) ToDTO() (input *UserDTO) {
 
 	var profile *ProfileDTO
+	var posts []PostDTO
+	var comments []CommentDTO
 	if i.Profile != nil {
 		profile = i.Profile.ToDTO()
+	}
+
+	if i.Posts != nil {
+		for _, post := range i.Posts {
+			posts = append(posts, *post.ToDTO())
+		}
+	}
+
+	if i.Comments != nil {
+		for _, comment := range i.Comments {
+			comments = append(comments, *comment.ToDTO())
+		}
 	}
 
 	return &UserDTO{
@@ -45,16 +61,7 @@ func (i User) ToDTO() (input *UserDTO) {
 		PasswordHash:   i.PasswordHash,
 		SignInProvider: i.SignInProvider,
 		Profile:        profile,
-	}
-}
-
-func (i User) FromDTO(model UserDTO) *User {
-	return &User{
-		UserID:         model.UserID,
-		Username:       model.Username,
-		Email:          model.Email,
-		Fullname:       model.Fullname,
-		PasswordHash:   model.PasswordHash,
-		SignInProvider: model.SignInProvider,
+		Posts:          posts,
+		Comments:       comments,
 	}
 }
