@@ -5,6 +5,7 @@ import (
 	"main/pkg/constants"
 	"main/pkg/database"
 	"main/pkg/database/entities"
+	"main/pkg/types"
 	"main/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -18,8 +19,11 @@ func Me(c *gin.Context) {
 		return
 	}
 
-	query := entities.User{UserID: currentUser.UserID}
-	userFind, notfound, errUserFind := database.UserRepository.Find(query, "Profile")
+	query := types.QueryOptions{
+		Query:    entities.User{UserID: currentUser.UserID},
+		Preloads: []string{"Profile"},
+	}
+	userFind, notfound, errUserFind := database.UserRepository.Find(query)
 
 	if errUserFind != nil {
 		if notfound {

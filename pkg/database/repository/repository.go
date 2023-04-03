@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"main/pkg/types"
 
 	"gorm.io/gorm"
 )
@@ -37,9 +38,9 @@ func (r *GormRepository[T]) FindByStringID(id string, preloads ...string) (*T, b
 	return &entity, false, nil
 }
 
-func (r *GormRepository[T]) Find(query T, preloads ...string) (*T, bool, error) {
+func (r *GormRepository[T]) Find(options types.QueryOptions) (*T, bool, error) {
 	var entity T
-	err := r.DBWithPreloads(preloads).Where(query).First(&entity).Error
+	err := r.DBWithPreloads(options.Preloads).Where(options.Query, options.Args).First(&entity).Error
 	if err != nil {
 		return nil, errors.Is(err, gorm.ErrRecordNotFound), err
 	}
