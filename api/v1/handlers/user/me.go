@@ -30,8 +30,6 @@ func Me(c *gin.Context) {
 		return
 	}
 
-	fmt.Printf("%+v\n", userFind)
-
 	utils.GinApiResponse(c, 200, "", userFind.ToDTO(), nil)
 	return
 }
