@@ -50,4 +50,5 @@ func getConnectionString(cfg *config.Config) string {
 
 func initRepositories(db *gorm.DB) {
 	UserRepository = repository.NewRepository[e.User](db, nil)
+	PostRepository = repository.NewRepository[e.Post](db, nil)
 }

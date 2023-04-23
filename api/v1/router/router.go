@@ -2,6 +2,7 @@ package router
 
 import (
 	auth_handlers "main/api/v1/handlers/auth"
+	post_handlers "main/api/v1/handlers/post"
 	user_handlers "main/api/v1/handlers/user"
 	"main/api/v1/middleware"
 
@@ -33,6 +34,9 @@ func Start(r *gin.Engine) {
 		//User
 		GinProtected.GET(routes.Me, user_handlers.Me)
 		GinProtected.PUT(routes.UpdateUser, user_handlers.UpdateUser)
+
+		//Post
+		GinProtected.POST(routes.CreatePost, post_handlers.CreatePost)
 
 		//Server
 		GinProtected.GET(routes.HealthAuth, sv_handlers.Health)

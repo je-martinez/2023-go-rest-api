@@ -6,6 +6,7 @@ import (
 	"main/pkg/constants"
 	"main/pkg/database"
 	"main/pkg/database/entities"
+	"main/pkg/types"
 	"main/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -26,7 +27,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	foundUser, notFound, err := database.UserRepository.Find(entities.User{Username: loginData.Username})
+	query := types.QueryOptions{
+		Query: entities.User{Username: loginData.Username},
+	}
+
+	foundUser, notFound, err := database.UserRepository.Find(query)
 
 	if err != nil {
 		if notFound {
@@ -58,5 +63,4 @@ func Login(c *gin.Context) {
 	}
 
 	utils.GinApiResponse(c, 200, "", responseData, nil)
-	return
 }
