@@ -1,7 +1,6 @@
 package post_handlers
 
 import (
-	"fmt"
 	"main/pkg/DTOs"
 	"main/pkg/constants"
 	"main/pkg/database"
@@ -26,8 +25,6 @@ func CreatePost(c *gin.Context) {
 		utils.GinApiResponse(c, 400, constants.ERR_BIND_MULTIPART, nil, []string{err.Error()})
 		return
 	}
-
-	fmt.Printf("%+v\n", post)
 
 	newPost := post.ToEntity(post.Content, currentUser.UserID)
 
