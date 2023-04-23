@@ -10,7 +10,6 @@ import (
 
 func Health(c *gin.Context) {
 	utils.GinApiResponse(c, 200, constants.MSG_HEALTH, nil, nil)
-	return
 }
 
 func PrometheusHandler() gin.HandlerFunc {

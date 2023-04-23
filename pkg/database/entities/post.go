@@ -8,7 +8,7 @@ type Post struct {
 	PostID        string `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
 	UserID        string
 	Content       string
-	Comment_Count int64
+	Comment_Count int64 `gorm:"default:0"`
 	CreatedBy     string
 	CreatedAt     time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
 	UpdatedBy     string
@@ -20,13 +20,13 @@ type Post struct {
 }
 
 type PostDTO struct {
-	PostID        string
-	UserID        string
-	Content       string
-	Comment_Count int64
-	Comments      []CommentDTO
-	Files         []FileDTO
-	Reactions     []ReactionDTO
+	PostID        string        `json:"post_id"`
+	UserID        string        `json:"user_id"`
+	Content       string        `json:"content"`
+	Comment_Count int64         `json:"comment_count"`
+	Comments      []CommentDTO  `json:"comments"`
+	Files         []FileDTO     `json:"files"`
+	Reactions     []ReactionDTO `json:"reactions"`
 }
 
 func (i Post) ToDTO() *PostDTO {

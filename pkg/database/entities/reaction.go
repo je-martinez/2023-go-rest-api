@@ -19,11 +19,11 @@ type Reaction struct {
 }
 
 type ReactionDTO struct {
-	ReactionID   string
-	ReactionType dbe.ReactionType
-	PostId       string
-	CommentId    string
-	UserId       string
+	ReactionID   string           `json:"reaction_id"`
+	ReactionType dbe.ReactionType `json:"reaction_type"`
+	PostId       string           `json:"post_id"`
+	CommentId    string           `json:"comment_id"`
+	UserId       string           `json:"user_id"`
 }
 
 func (i Reaction) ToDTO() *ReactionDTO {

@@ -11,4 +11,6 @@ const (
 	//User
 	Me         = "/user/me"
 	UpdateUser = "/user/update"
+	//Post
+	CreatePost = "/post/create"
 )

@@ -3,6 +3,7 @@ package constants
 // General Errors
 const (
 	ERR_BIND_JSON      = "Error binding JSON"
+	ERR_BIND_MULTIPART = "Error binding multipart/form data"
 	ERR_INVALID_JSON   = "Error with the provided JSON"
 	ERR_CURRENT_USER   = "Error related to retrieve logged user"
 	ERR_GENERATE_TOKEN = "Error trying to generate a new access token"

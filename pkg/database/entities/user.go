@@ -28,8 +28,8 @@ type UserDTO struct {
 	PasswordHash   string                 `json:"-"`
 	SignInProvider dbe.SignInProviderType `json:"sign_in_provider"`
 	Profile        *ProfileDTO            `json:"profile"`
-	Posts          []PostDTO
-	Comments       []CommentDTO
+	Posts          []PostDTO              `json:"posts"`
+	Comments       []CommentDTO           `json:"comments"`
 }
 
 func (i User) ToDTO() (input *UserDTO) {

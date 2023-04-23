@@ -19,12 +19,12 @@ type File struct {
 }
 
 type FileDTO struct {
-	FileID    string
-	PostId    string
-	CommentId string
-	Name      string
-	Path      string
-	MimeType  string
+	FileID    string `json:"file_id"`
+	PostId    string `json:"post_id"`
+	CommentId string `json:"comment_id"`
+	Name      string `json:"name"`
+	Path      string `json:"path"`
+	MimeType  string `json:"mimetype"`
 }
 
 func (i File) ToDTO() *FileDTO {

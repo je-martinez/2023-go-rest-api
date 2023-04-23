@@ -63,5 +63,4 @@ func Login(c *gin.Context) {
 	}
 
 	utils.GinApiResponse(c, 200, "", responseData, nil)
-	return
 }

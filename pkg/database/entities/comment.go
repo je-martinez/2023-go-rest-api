@@ -18,11 +18,11 @@ type Comment struct {
 }
 
 type CommentDTO struct {
-	CommentID string
-	PostID    string
-	UserID    string
-	Content   string
-	File      *FileDTO
+	CommentID string   `json:"comment_id"`
+	PostID    string   `json:"post_id"`
+	UserID    string   `json:"user_id"`
+	Content   string   `json:"content"`
+	File      *FileDTO `json:"file"`
 }
 
 func (i Comment) ToDTO() *CommentDTO {
