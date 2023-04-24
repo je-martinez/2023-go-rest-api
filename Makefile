@@ -13,11 +13,11 @@ swaggo:
 # ==============================================================================
 # Main
 
-go-run:
-	go run ./cmd/api/main.go
-
 go-build:
 	go build ./cmd/api/main.go
+
+go-run: go-build
+	go run ./cmd/api/main.go
 
 go-test:
 	go test -cover ./...

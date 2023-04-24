@@ -3,6 +3,7 @@ package server
 import (
 	router "main/api/v1/router"
 	"main/config"
+	"main/pkg/bucket_manager"
 	constants "main/pkg/constants"
 	"main/pkg/database"
 	"main/pkg/logger"
@@ -24,6 +25,7 @@ func Start(cfg *config.Config) {
 	Server.Gin = gin.New()
 	Server.Config = cfg
 	Server.Database = database.Start(cfg)
+	Server.BucketManager = bucket_manager.Start(cfg)
 
 	//Initialize Router And Run Server
 	router.Start(Server.Gin)
