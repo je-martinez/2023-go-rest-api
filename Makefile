@@ -35,3 +35,6 @@ down:
 logs:
 	echo "Starting local environment"
 	docker-compose -f docker-compose.local.yml logs -f
+
+dev: 
+	make up && make logs

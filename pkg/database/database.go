@@ -2,11 +2,12 @@ package database
 
 import (
 	"fmt"
-	"main/config"
-	constants "main/pkg/constants"
-	e "main/pkg/database/entities"
-	"main/pkg/database/repository"
-	l "main/pkg/logger"
+
+	"github.com/je-martinez/2023-go-rest-api/config"
+	constants "github.com/je-martinez/2023-go-rest-api/pkg/constants"
+	e "github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
+	"github.com/je-martinez/2023-go-rest-api/pkg/database/repository"
+	l "github.com/je-martinez/2023-go-rest-api/pkg/logger"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

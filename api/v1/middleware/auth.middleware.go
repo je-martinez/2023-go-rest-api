@@ -2,9 +2,10 @@ package middleware
 
 import (
 	"fmt"
-	"main/config"
-	"main/pkg/utils"
 	"net/http"
+
+	"github.com/je-martinez/2023-go-rest-api/config"
+	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

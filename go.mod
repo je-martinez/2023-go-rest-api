@@ -1,4 +1,4 @@
-module main
+module github.com/je-martinez/2023-go-rest-api
 
 go 1.19
 

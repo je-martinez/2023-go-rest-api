@@ -1,10 +1,10 @@
 package post_handlers
 
 import (
-	"main/pkg/DTOs"
-	"main/pkg/constants"
-	"main/pkg/database"
-	"main/pkg/utils"
+	"github.com/je-martinez/2023-go-rest-api/pkg/DTOs"
+	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
+	"github.com/je-martinez/2023-go-rest-api/pkg/database"
+	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,7 +1,7 @@
 package types
 
 import (
-	"main/config"
+	"github.com/je-martinez/2023-go-rest-api/config"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"

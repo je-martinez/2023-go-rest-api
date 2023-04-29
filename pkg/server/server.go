@@ -1,13 +1,13 @@
 package server
 
 import (
-	"main/api/v1/router"
-	"main/config"
-	"main/pkg/bucket_manager"
-	constants "main/pkg/constants"
-	"main/pkg/database"
-	"main/pkg/logger"
-	types "main/pkg/types"
+	"github.com/je-martinez/2023-go-rest-api/api/v1/router"
+	"github.com/je-martinez/2023-go-rest-api/config"
+	"github.com/je-martinez/2023-go-rest-api/pkg/bucket_manager"
+	constants "github.com/je-martinez/2023-go-rest-api/pkg/constants"
+	"github.com/je-martinez/2023-go-rest-api/pkg/database"
+	"github.com/je-martinez/2023-go-rest-api/pkg/logger"
+	types "github.com/je-martinez/2023-go-rest-api/pkg/types"
 
 	"github.com/gin-gonic/gin"
 )

@@ -2,9 +2,10 @@ package bucket_manager
 
 import (
 	"context"
-	"main/config"
-	"main/pkg/constants"
-	l "main/pkg/logger"
+
+	"github.com/je-martinez/2023-go-rest-api/config"
+	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
+	l "github.com/je-martinez/2023-go-rest-api/pkg/logger"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"

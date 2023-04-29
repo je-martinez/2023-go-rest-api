@@ -1,10 +1,10 @@
 package main
 
 import (
-	"main/config"
-	"main/pkg/cache"
-	"main/pkg/logger"
-	"main/pkg/server"
+	"github.com/je-martinez/2023-go-rest-api/config"
+	"github.com/je-martinez/2023-go-rest-api/pkg/cache"
+	"github.com/je-martinez/2023-go-rest-api/pkg/logger"
+	"github.com/je-martinez/2023-go-rest-api/pkg/server"
 )
 
 func main() {

@@ -2,11 +2,12 @@ package utils
 
 import (
 	"fmt"
-	"main/config"
-	"main/pkg/database/entities"
-	"main/pkg/types"
 	"strings"
 	"time"
+
+	"github.com/je-martinez/2023-go-rest-api/config"
+	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
+	"github.com/je-martinez/2023-go-rest-api/pkg/types"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

@@ -1,13 +1,13 @@
 package router
 
 import (
-	auth_handlers "main/api/v1/handlers/auth"
-	post_handlers "main/api/v1/handlers/post"
-	user_handlers "main/api/v1/handlers/user"
-	"main/api/v1/middleware"
+	auth_handlers "github.com/je-martinez/2023-go-rest-api/api/v1/handlers/auth"
+	post_handlers "github.com/je-martinez/2023-go-rest-api/api/v1/handlers/post"
+	user_handlers "github.com/je-martinez/2023-go-rest-api/api/v1/handlers/user"
+	"github.com/je-martinez/2023-go-rest-api/api/v1/middleware"
 
-	sv_handlers "main/api/v1/handlers/server"
-	routes "main/pkg/constants"
+	sv_handlers "github.com/je-martinez/2023-go-rest-api/api/v1/handlers/server"
+	routes "github.com/je-martinez/2023-go-rest-api/pkg/constants"
 
 	"github.com/gin-gonic/gin"
 )

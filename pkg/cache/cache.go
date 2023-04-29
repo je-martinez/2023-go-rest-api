@@ -2,8 +2,9 @@ package cache
 
 import (
 	"context"
-	"main/config"
 	"time"
+
+	"github.com/je-martinez/2023-go-rest-api/config"
 
 	"github.com/redis/go-redis/v9"
 )

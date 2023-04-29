@@ -2,7 +2,8 @@ package repository
 
 import (
 	"errors"
-	"main/pkg/types"
+
+	"github.com/je-martinez/2023-go-rest-api/pkg/types"
 
 	"gorm.io/gorm"
 )

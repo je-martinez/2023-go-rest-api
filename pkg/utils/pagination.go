@@ -1,6 +1,6 @@
 package utils
 
-import "main/pkg/types"
+import "github.com/je-martinez/2023-go-rest-api/pkg/types"
 
 const pageSize = 100
 

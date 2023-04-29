@@ -1,8 +1,9 @@
 package logger
 
 import (
-	"main/config"
 	"os"
+
+	"github.com/je-martinez/2023-go-rest-api/config"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

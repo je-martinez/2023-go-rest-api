@@ -12,6 +12,8 @@ services:
     depends_on:
       crdb-1:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - web_api
   redis:
@@ -20,6 +22,11 @@ services:
     ports:
       - "6379:6379"
     restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - web_api
   crdb-1:

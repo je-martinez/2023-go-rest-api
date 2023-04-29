@@ -1,8 +1,8 @@
 package server_handlers
 
 import (
-	"main/pkg/constants"
-	"main/pkg/utils"
+	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
+	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

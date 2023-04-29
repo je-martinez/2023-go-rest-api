@@ -1,8 +1,8 @@
 package DTOs
 
 import (
-	"main/pkg/database/entities"
-	t "main/pkg/database/extensions"
+	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
+	t "github.com/je-martinez/2023-go-rest-api/pkg/database/extensions"
 )
 
 type LoginDTO struct {

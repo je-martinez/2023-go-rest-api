@@ -1,8 +1,9 @@
 package DTOs
 
 import (
-	"main/pkg/database/entities"
 	"mime/multipart"
+
+	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
 )
 
 type CreatePostDTO struct {
