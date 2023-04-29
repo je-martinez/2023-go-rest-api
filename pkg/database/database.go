@@ -16,10 +16,6 @@ import (
 var Database *gorm.DB
 
 // Repositories Instance
-
-type ABC struct {
-}
-
 func Start(cfg *config.Config) *gorm.DB {
 	database, err := gorm.Open(postgres.Open(getConnectionString(cfg)), &gorm.Config{})
 	if err != nil {

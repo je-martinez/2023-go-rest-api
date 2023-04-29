@@ -2,7 +2,6 @@ package bucket_manager
 
 import (
 	"context"
-	"log"
 	"main/config"
 	"main/pkg/constants"
 	l "main/pkg/logger"
@@ -24,6 +23,8 @@ func Start(cfg *config.Config) *minio.Client {
 		return nil
 	}
 	MinioClient = minioClient
+	l.ApiLogger.Info(constants.BUCKET_MANAGER_STARTED)
+
 	return MinioClient
 }
 
@@ -36,7 +37,7 @@ func CreateBucket(ctx context.Context, bucketName string, location string) bool 
 			l.ApiLogger.Infof(constants.BUCKET_ALREADY_EXISTS, bucketName)
 			return false
 		} else {
-			log.Fatalln(constants.BUCKET_CREATION_ERROR, err.Error())
+			l.ApiLogger.Error(constants.BUCKET_CREATION_ERROR, err.Error())
 			return false
 		}
 	} else {

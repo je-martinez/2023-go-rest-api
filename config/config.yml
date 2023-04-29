@@ -46,7 +46,7 @@ metrics:
 
 aws:
   Endpoint: 127.0.0.1:9000
-  MinioAccessKey: minio
-  MinioSecretKey: minio123
+  MinioAccessKey: ""
+  MinioSecretKey: ""
   UseSSL: false
-  MinioEndpoint: http://127.0.0.1:9000
+  MinioEndpoint: http://minio-storage:9000
