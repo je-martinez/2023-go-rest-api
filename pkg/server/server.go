@@ -1,7 +1,7 @@
 package server
 
 import (
-	router "main/api/v1/router"
+	"main/api/v1/router"
 	"main/config"
 	"main/pkg/bucket_manager"
 	constants "main/pkg/constants"

@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.air
+    ports:
+      - "4500:4500"
+    volumes:
+      - .:/app
+    depends_on:
+      crdb-1:
+        condition: service_healthy
+    networks:
+      - web_api
   redis:
     image: redis:6.0.9-alpine
     container_name: api_redis
@@ -10,6 +23,7 @@ services:
     networks:
       - web_api
   crdb-1:
+    container_name: crdb-db
     image: cockroachdb/cockroach:latest
     ports:
       - "8080:8080"
@@ -17,6 +31,11 @@ services:
     volumes:
       - crdb-1-data:/cockroach/cockroach-data
     command: start --insecure --join=crdb-1,crdb-2,crdb-3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health?ready=1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - web_api
 

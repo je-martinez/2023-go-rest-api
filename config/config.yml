@@ -21,7 +21,7 @@ logger:
   Level: info
 
 database:
-  PostgresqlHost: localhost
+  PostgresqlHost: crdb-db
   PostgresqlPort: 26257
   PostgresqlUser: "root"
   PostgresqlPassword: ""
