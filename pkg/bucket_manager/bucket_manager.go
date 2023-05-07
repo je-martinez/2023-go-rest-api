@@ -51,7 +51,7 @@ func DeleteBucket(ctx context.Context, bucketName string) bool {
 		l.ApiLogger.Errorf(constants.BUCKET_MANAGER_NOT_STARTED, bucketName)
 		return false
 	}
-	if validateIfBucketExist(ctx, bucketName) {
+	if !validateIfBucketExist(ctx, bucketName) {
 		return false
 	}
 
