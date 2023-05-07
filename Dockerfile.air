@@ -16,7 +16,7 @@ COPY . .
 # Install Air
 RUN go install github.com/cosmtrek/air@latest
 
-# Expose port 8080
+# Expose port 4500
 EXPOSE 4500
 
 # Start the application

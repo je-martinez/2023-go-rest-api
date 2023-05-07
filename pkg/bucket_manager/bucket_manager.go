@@ -30,6 +30,12 @@ func Start(cfg *config.Config) *minio.Client {
 }
 
 func CreateBucket(ctx context.Context, bucketName string, location string) bool {
+
+	if MinioClient == nil {
+		l.ApiLogger.Errorf(constants.BUCKET_MANAGER_NOT_STARTED, bucketName)
+		return false
+	}
+
 	err := MinioClient.MakeBucket(ctx, bucketName, minio.MakeBucketOptions{Region: location})
 	if err != nil {
 		// Check to see if we already own this bucket (which happens if you run this twice)
