@@ -6,6 +6,8 @@ const (
 	BUCKET_MANAGER_STARTED     = "Bucket manager started!"
 	BUCKET_ALREADY_EXISTS      = "Bucket with name %s already exists"
 	BUCKET_CREATED             = "Bucket created with no problems"
+	BUCKET_DELETED             = "Bucket deleted with no problems"
 	BUCKET_CREATION_ERROR      = "Unable to create new bucket"
+	BUCKET_DELETE_ERROR        = "Unable to delete new bucket"
 	BUCKET_CREATION_USER_ERROR = "Failed to created buckert for user: %s"
 )
