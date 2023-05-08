@@ -2,6 +2,8 @@ package bucket_manager
 
 import (
 	"context"
+	"errors"
+	"mime/multipart"
 
 	"github.com/je-martinez/2023-go-rest-api/config"
 	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
@@ -64,13 +66,29 @@ func DeleteBucket(ctx context.Context, bucketName string) bool {
 	return true
 }
 
+func UploadFile(ctx context.Context, bucketName string, name string, file multipart.File, size int64) (minio.UploadInfo, error) {
+	if MinioClient == nil {
+		l.ApiLogger.Errorf(constants.BUCKET_MANAGER_NOT_STARTED, bucketName)
+		return minio.UploadInfo{}, errors.New(constants.BUCKET_MANAGER_NOT_STARTED)
+	}
+	if !validateIfBucketExist(ctx, bucketName) {
+		return minio.UploadInfo{}, errors.New(constants.BUCKET_DOESNT_EXISTS)
+	}
+	upload, err := MinioClient.PutObject(ctx, bucketName, name, file, size, minio.PutObjectOptions{})
+
+	if err != nil {
+		l.ApiLogger.Error(constants.UPLOAD_POST_FILE_ERR, err.Error())
+	}
+
+	return upload, err
+}
+
 func validateIfBucketExist(ctx context.Context, bucketName string) bool {
 	exists, errBucketExists := MinioClient.BucketExists(ctx, bucketName)
-	if errBucketExists == nil && exists {
-		l.ApiLogger.Infof(constants.BUCKET_ALREADY_EXISTS, bucketName)
-		return true
-	} else {
+	if errBucketExists != nil {
 		l.ApiLogger.Error(constants.BUCKET_CREATION_ERROR, errBucketExists.Error())
 		return false
 	}
+	l.ApiLogger.Infof(constants.BUCKET_ALREADY_EXISTS, bucketName)
+	return exists
 }

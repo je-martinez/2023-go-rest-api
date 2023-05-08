@@ -5,6 +5,7 @@ const (
 	STARTING_BUCKET_MANAGER    = "Unable to start Minio Client"
 	BUCKET_MANAGER_STARTED     = "Bucket manager started!"
 	BUCKET_ALREADY_EXISTS      = "Bucket with name %s already exists"
+	BUCKET_DOESNT_EXISTS       = "Bucket with name %s doesn't exists"
 	BUCKET_CREATED             = "Bucket created with no problems"
 	BUCKET_DELETED             = "Bucket deleted with no problems"
 	BUCKET_CREATION_ERROR      = "Unable to create new bucket"
