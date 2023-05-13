@@ -25,7 +25,7 @@ func Start(cfg *config.Config) {
 	Server.Gin = gin.New()
 	Server.Config = cfg
 	Server.Database = database.Start(cfg)
-	Server.BucketManager = bucket_manager.Start(cfg)
+	Server.BucketManager, _ = bucket_manager.StartGlobalInstance(&cfg.AWS)
 
 	//Initialize Router And Run Server
 	router.Start(Server.Gin)

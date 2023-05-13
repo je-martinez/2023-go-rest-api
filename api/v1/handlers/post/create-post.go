@@ -83,7 +83,8 @@ func handleUploadFiles(ctx context.Context, files []multipart.FileHeader, bucket
 		log.Println(file.Header)
 		tmpName := strconv.FormatInt(time.Now().Unix(), 10) + "." + getExtension(file.Filename)
 		location := fmt.Sprintf("posts/%s/%s", post_id, tmpName)
-		upload, err := bucket_manager.UploadFile(ctx, bucketName, location, tmpFile, file.Size)
+		ctx := context.Background()
+		upload, err := bucket_manager.GlobalInstance.UploadFile(ctx, bucketName, location, tmpFile, file.Size)
 		if err != nil {
 			return nil, err
 		}

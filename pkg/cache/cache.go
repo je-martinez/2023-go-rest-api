@@ -1,17 +1,17 @@
 package cache
 
 import (
-	"context"
 	"time"
+
+	"context"
 
 	"github.com/je-martinez/2023-go-rest-api/config"
 
 	"github.com/redis/go-redis/v9"
 )
 
-func New(ctx *context.Context, cfg *config.RedisConfig) *RedisApiInstance {
+func New(cfg *config.RedisConfig) *RedisApiInstance {
 	return &RedisApiInstance{
-		ctx: ctx,
 		client: redis.NewClient(&redis.Options{
 			Addr:         cfg.RedisAddr,
 			MinIdleConns: cfg.MinIdleConns,
@@ -24,18 +24,17 @@ func New(ctx *context.Context, cfg *config.RedisConfig) *RedisApiInstance {
 }
 
 type RedisApiInstance struct {
-	ctx    *context.Context
 	client *redis.Client
 }
 
-func (r *RedisApiInstance) Add(key string, value interface{}) error {
-	return r.client.Set(*r.ctx, key, value, 0).Err()
+func (r *RedisApiInstance) Add(ctx context.Context, key string, value interface{}) error {
+	return r.client.Set(ctx, key, value, 0).Err()
 }
 
-func (r *RedisApiInstance) Remove(key ...string) (int64, error) {
-	return r.client.Del(*r.ctx, key...).Result()
+func (r *RedisApiInstance) Remove(ctx context.Context, key ...string) (int64, error) {
+	return r.client.Del(ctx, key...).Result()
 }
 
-func (r *RedisApiInstance) Get(key string) (string, error) {
-	return r.client.Get(*r.ctx, key).Result()
+func (r *RedisApiInstance) Get(ctx context.Context, key string) (string, error) {
+	return r.client.Get(ctx, key).Result()
 }

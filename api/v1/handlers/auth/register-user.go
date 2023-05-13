@@ -35,9 +35,10 @@ func RegisterUser(c *gin.Context) {
 		utils.GinApiResponse(c, 400, fmt.Sprintf(constants.ERR_CREATE_ENTITY, "User"), nil, []string{errInsert.Error()})
 		return
 	}
+
 	ctx := context.Background()
 
-	bucketCreated := bucket_manager.CreateBucket(ctx, newRecord.UserID, constants.US_EAST_NORTH_VIRGINIA)
+	bucketCreated := bucket_manager.GlobalInstance.CreateBucket(ctx, newRecord.UserID, constants.US_EAST_NORTH_VIRGINIA)
 
 	if !bucketCreated {
 		utils.GinApiResponse(c, 500, fmt.Sprintf(constants.BUCKET_CREATION_USER_ERROR, newRecord.UserID), nil, []string{errInsert.Error()})
