@@ -24,3 +24,5 @@ go.work
 
 # Docker Storage
 .docker-volumes
+
+.DS_Store

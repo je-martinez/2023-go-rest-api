@@ -83,6 +83,23 @@ func UploadFile(ctx context.Context, bucketName string, name string, file multip
 	return upload, err
 }
 
+func DeleteFile(ctx context.Context, bucketName string, keyObject string) error {
+	if MinioClient == nil {
+		l.ApiLogger.Errorf(constants.BUCKET_MANAGER_NOT_STARTED, bucketName)
+		return errors.New(constants.BUCKET_MANAGER_NOT_STARTED)
+	}
+	if !validateIfBucketExist(ctx, bucketName) {
+		return errors.New(constants.BUCKET_DOESNT_EXISTS)
+	}
+	err := MinioClient.RemoveObject(ctx, bucketName, keyObject, minio.RemoveObjectOptions{})
+
+	if err != nil {
+		l.ApiLogger.Error(constants.DELETE_POST_FILE_ERR, err.Error())
+	}
+
+	return err
+}
+
 func validateIfBucketExist(ctx context.Context, bucketName string) bool {
 	exists, errBucketExists := MinioClient.BucketExists(ctx, bucketName)
 	if errBucketExists != nil {

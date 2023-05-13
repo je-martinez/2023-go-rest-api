@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"mime/multipart"
 	"time"
 )
 
@@ -9,6 +10,7 @@ type File struct {
 	PostId    string
 	CommentId string
 	Name      string
+	Key       string
 	Path      string
 	MimeType  string
 	CreatedBy string
@@ -34,5 +36,13 @@ func (i File) ToDTO() *FileDTO {
 		CommentId: i.CommentId,
 		Name:      i.Name,
 		MimeType:  i.MimeType,
+	}
+}
+
+func (i File) FromMinioUpload(key string, path string, file multipart.FileHeader) File {
+	return File{
+		Name: file.Filename,
+		Key:  key,
+		Path: path,
 	}
 }
