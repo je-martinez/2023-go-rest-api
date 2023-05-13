@@ -21,6 +21,9 @@ func (r *GormRepository[T]) Create(entity *T) error {
 	return r.db.Create(entity).Error
 }
 
+func (r *GormRepository[T]) CreateBatch(entity []T) error {
+	return r.db.Create(entity).Error
+}
 func (r *GormRepository[T]) FindByID(id uint, preloads ...string) (*T, bool, error) {
 	var entity T
 	err := r.DBWithPreloads(preloads).First(&entity, id).Error

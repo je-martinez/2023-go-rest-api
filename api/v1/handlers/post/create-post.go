@@ -50,13 +50,12 @@ func CreatePost(c *gin.Context) {
 	postFiles, err := handleUploadFiles(ctx, post.Files, currentUser.UserID, newPost.PostID, currentUser.UserID)
 
 	if len(postFiles) > 0 {
-		for _, postFile := range postFiles {
-			err := database.FileRepository.Create(&postFile)
-			if err != nil {
-				utils.GinApiResponse(c, 500, constants.UPLOAD_POST_FILES_ERR, nil, []string{})
-			}
-			newPost.Files = append(newPost.Files, postFile)
+		err := database.FileRepository.CreateBatch(postFiles)
+		if err != nil {
+			utils.GinApiResponse(c, 500, constants.UPLOAD_POST_FILES_ERR, nil, []string{})
 		}
+		newPost.Files = append(newPost.Files, postFiles...)
+
 	}
 
 	if err != nil {
