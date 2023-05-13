@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/je-martinez/2023-go-rest-api/config"
+	router_types "github.com/je-martinez/2023-go-rest-api/pkg/types/router"
 	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
+func AuthMiddleware(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		SECRET_KEY := config.AppConfig.Server.JwtSecretKey
+		SECRET_KEY := props.Config.JwtSecretKey
 		tokenString := utils.ExtractToken(c)
 
 		if tokenString == "" {

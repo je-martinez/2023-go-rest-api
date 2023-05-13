@@ -7,46 +7,40 @@ import (
 
 	"github.com/je-martinez/2023-go-rest-api/config"
 	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
-	l "github.com/je-martinez/2023-go-rest-api/pkg/logger"
+	"github.com/je-martinez/2023-go-rest-api/pkg/logger"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
-var GlobalInstance *MinioApiInstance
-
-func StartGlobalInstance(cfg *config.AWS) (*MinioApiInstance, error) {
-	var err error
-	GlobalInstance, err = New(cfg)
-	return GlobalInstance, err
-}
-
-func New(cfg *config.AWS) (*MinioApiInstance, error) {
+func New(cfg *config.AWS, logger *logger.ApiLogger) (*MinioApiInstance, error) {
 	client, err := minio.New(cfg.Endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(cfg.MinioAccessKey, cfg.MinioSecretKey, ""),
 		Secure: cfg.UseSSL,
 	})
 	if err != nil {
-		l.ApiLogger.Fatal(constants.STARTING_BUCKET_MANAGER, err)
+		logger.Fatal(constants.STARTING_BUCKET_MANAGER, err)
 		return nil, err
 	}
-	l.ApiLogger.Info(constants.BUCKET_MANAGER_STARTED)
+	logger.Info(constants.BUCKET_MANAGER_STARTED)
 	return &MinioApiInstance{
 		client: client,
+		logger: logger,
 	}, nil
 }
 
 type MinioApiInstance struct {
 	client *minio.Client
+	logger *logger.ApiLogger
 }
 
 func (m *MinioApiInstance) ValidateIfBucketExist(ctx context.Context, bucketName string) (sucess bool) {
 	exists, errBucketExists := m.client.BucketExists(ctx, bucketName)
 	if errBucketExists != nil {
-		l.ApiLogger.Error(constants.BUCKET_CREATION_ERROR, errBucketExists.Error())
+		m.logger.Error(constants.BUCKET_CREATION_ERROR, errBucketExists.Error())
 		return false
 	}
-	l.ApiLogger.Infof(constants.BUCKET_ALREADY_EXISTS, bucketName)
+	m.logger.Infof(constants.BUCKET_ALREADY_EXISTS, bucketName)
 	return exists
 }
 
@@ -56,7 +50,7 @@ func (m *MinioApiInstance) CreateBucket(ctx context.Context, bucketName string, 
 		// Check to see if we already own this bucket (which happens if you run this twice)
 		return m.ValidateIfBucketExist(ctx, bucketName)
 	} else {
-		l.ApiLogger.Info(constants.BUCKET_CREATED)
+		m.logger.Info(constants.BUCKET_CREATED)
 		return true
 	}
 }
@@ -67,10 +61,10 @@ func (m *MinioApiInstance) DeleteBucket(ctx context.Context, bucketName string) 
 	}
 	err := m.client.RemoveBucket(ctx, bucketName)
 	if err != nil {
-		l.ApiLogger.Infof(constants.BUCKET_DELETE_ERROR, bucketName)
+		m.logger.Infof(constants.BUCKET_DELETE_ERROR, bucketName)
 		return false, false
 	}
-	l.ApiLogger.Infof(constants.BUCKET_DELETED, bucketName)
+	m.logger.Infof(constants.BUCKET_DELETED, bucketName)
 	return true, false
 }
 
@@ -80,7 +74,7 @@ func (m *MinioApiInstance) UploadFile(ctx context.Context, bucketName string, na
 	}
 	upload, err := m.client.PutObject(ctx, bucketName, name, file, size, minio.PutObjectOptions{})
 	if err != nil {
-		l.ApiLogger.Error(constants.UPLOAD_POST_FILE_ERR, err.Error())
+		m.logger.Error(constants.UPLOAD_POST_FILE_ERR, err.Error())
 	}
 	return &upload, err
 }
@@ -91,7 +85,7 @@ func (m *MinioApiInstance) DeleteFile(ctx context.Context, bucketName string, ke
 	}
 	err := m.client.RemoveObject(ctx, bucketName, keyObject, minio.RemoveObjectOptions{})
 	if err != nil {
-		l.ApiLogger.Error(constants.DELETE_POST_FILE_ERR, err.Error())
+		m.logger.Error(constants.DELETE_POST_FILE_ERR, err.Error())
 	}
 	return err
 }
