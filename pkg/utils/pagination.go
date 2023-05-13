@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/je-martinez/2023-go-rest-api/pkg/types"
+import types "github.com/je-martinez/2023-go-rest-api/pkg/types/database"
 
 const pageSize = 100
 

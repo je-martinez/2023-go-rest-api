@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"mime/multipart"
 	"strconv"
 	"strings"
@@ -39,7 +38,7 @@ func CreatePost(c *gin.Context) {
 
 	newPost := post.ToEntity(post.Content, currentUser.UserID)
 
-	err = database.PostRepository.Create(newPost)
+	err = database.GlobalInstance.PostRepository.Create(newPost)
 
 	if err != nil {
 		utils.GinApiResponse(c, 500, constants.CREATE_POST_ERR, nil, utils.ValidateStructErrors(errCurrentUser))
@@ -50,7 +49,7 @@ func CreatePost(c *gin.Context) {
 	postFiles, err := handleUploadFiles(ctx, post.Files, currentUser.UserID, newPost.PostID, currentUser.UserID)
 
 	if len(postFiles) > 0 {
-		err := database.FileRepository.CreateBatch(postFiles)
+		err := database.GlobalInstance.FileRepository.CreateBatch(postFiles)
 		if err != nil {
 			utils.GinApiResponse(c, 500, constants.UPLOAD_POST_FILES_ERR, nil, []string{})
 		}
@@ -80,7 +79,6 @@ func handleUploadFiles(ctx context.Context, files []multipart.FileHeader, bucket
 		if err != nil {
 			return nil, errors.New(constants.READ_POST_FILE_ERR)
 		}
-		log.Println(file.Header)
 		tmpName := strconv.FormatInt(time.Now().Unix(), 10) + "." + getExtension(file.Filename)
 		location := fmt.Sprintf("posts/%s/%s", post_id, tmpName)
 		ctx := context.Background()

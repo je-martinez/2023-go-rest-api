@@ -7,7 +7,7 @@ import (
 	constants "github.com/je-martinez/2023-go-rest-api/pkg/constants"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database"
 	"github.com/je-martinez/2023-go-rest-api/pkg/logger"
-	types "github.com/je-martinez/2023-go-rest-api/pkg/types"
+	types "github.com/je-martinez/2023-go-rest-api/pkg/types/server"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +24,7 @@ func Start(cfg *config.Config) {
 	//Initialize Packages
 	Server.Gin = gin.New()
 	Server.Config = cfg
-	Server.Database = database.Start(cfg)
+	Server.Database, _ = database.StartGlobalInstance(&cfg.Database)
 	Server.BucketManager, _ = bucket_manager.StartGlobalInstance(&cfg.AWS)
 
 	//Initialize Router And Run Server

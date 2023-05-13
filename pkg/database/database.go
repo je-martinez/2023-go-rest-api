@@ -13,41 +13,52 @@ import (
 	"gorm.io/gorm"
 )
 
-// Instance
-var Database *gorm.DB
+var GlobalInstance *DatabaseApiInstance
 
-// Repositories Instance
-func Start(cfg *config.Config) *gorm.DB {
+func StartGlobalInstance(cfg *config.DatabaseConfig) (*DatabaseApiInstance, error) {
+	var err error
+	GlobalInstance, err = New(cfg)
+	return GlobalInstance, err
+}
+
+func New(cfg *config.DatabaseConfig) (*DatabaseApiInstance, error) {
+	//Establish connection with Database
 	database, err := gorm.Open(postgres.Open(getConnectionString(cfg)), &gorm.Config{})
 	if err != nil {
 		l.ApiLogger.Fatal(constants.CONNECT_DB_ERROR, err)
+		return nil, err
 	}
+	//Auto migrations
 	errAutoMigrate := database.AutoMigrate(&e.User{}, &e.Profile{}, e.Post{}, e.Comment{}, e.File{})
 	if errAutoMigrate != nil {
 		l.ApiLogger.Fatal(constants.DB_MIGRATION_ERROR, err)
+		return nil, errAutoMigrate
 	}
-	initRepositories(database)
-	Database = database
+	//Repositories
 	l.ApiLogger.Info(constants.DB_RUNNING)
-	return database
+	return &DatabaseApiInstance{
+		db:             database,
+		UserRepository: repository.NewRepository[e.User](database, nil),
+		PostRepository: repository.NewRepository[e.Post](database, nil),
+		FileRepository: repository.NewRepository[e.File](database, nil),
+	}, nil
 }
 
-func getConnectionString(cfg *config.Config) string {
+type DatabaseApiInstance struct {
+	db             *gorm.DB
+	UserRepository *repository.GormRepository[e.User]
+	PostRepository *repository.GormRepository[e.Post]
+	FileRepository *repository.GormRepository[e.File]
+}
 
-	db := cfg.Database
+func getConnectionString(cfg *config.DatabaseConfig) string {
+
 	var ssl string
-	if db.PostgresqlSSLMode {
+	if cfg.PostgresqlSSLMode {
 		ssl = "require"
 	} else {
 		ssl = "disable"
 	}
-	cnx := fmt.Sprintf("postgresql://%s:%s/%s?sslmode=%s&user=%s&password=%s", db.PostgresqlHost, db.PostgresqlPort, db.PostgresqlDbname, ssl, db.PostgresqlUser, db.PostgresqlPassword)
+	cnx := fmt.Sprintf("postgresql://%s:%s/%s?sslmode=%s&user=%s&password=%s", cfg.PostgresqlHost, cfg.PostgresqlPort, cfg.PostgresqlDbname, ssl, cfg.PostgresqlUser, cfg.PostgresqlPassword)
 	return cnx
-}
-
-func initRepositories(db *gorm.DB) {
-	UserRepository = repository.NewRepository[e.User](db, nil)
-	PostRepository = repository.NewRepository[e.Post](db, nil)
-	FileRepository = repository.NewRepository[e.File](db, nil)
-
 }

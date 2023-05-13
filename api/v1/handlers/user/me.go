@@ -6,7 +6,7 @@ import (
 	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
-	"github.com/je-martinez/2023-go-rest-api/pkg/types"
+	types "github.com/je-martinez/2023-go-rest-api/pkg/types/database"
 	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +24,7 @@ func Me(c *gin.Context) {
 		Query:    entities.User{UserID: currentUser.UserID},
 		Preloads: []string{"Profile"},
 	}
-	userFind, notfound, errUserFind := database.UserRepository.Find(query)
+	userFind, notfound, errUserFind := database.GlobalInstance.UserRepository.Find(query)
 
 	if errUserFind != nil {
 		if notfound {
@@ -36,5 +36,4 @@ func Me(c *gin.Context) {
 	}
 
 	utils.GinApiResponse(c, 200, "", userFind.ToDTO(), nil)
-	return
 }

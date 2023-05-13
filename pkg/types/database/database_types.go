@@ -1,4 +1,4 @@
-package types
+package database_types
 
 type Pagination struct {
 	Pagination PaginationOptions

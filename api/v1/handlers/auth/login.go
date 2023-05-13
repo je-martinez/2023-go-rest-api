@@ -7,7 +7,7 @@ import (
 	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
-	"github.com/je-martinez/2023-go-rest-api/pkg/types"
+	types "github.com/je-martinez/2023-go-rest-api/pkg/types/database"
 	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -32,7 +32,7 @@ func Login(c *gin.Context) {
 		Query: entities.User{Username: loginData.Username},
 	}
 
-	foundUser, notFound, err := database.UserRepository.Find(query)
+	foundUser, notFound, err := database.GlobalInstance.UserRepository.Find(query)
 
 	if err != nil {
 		if notFound {

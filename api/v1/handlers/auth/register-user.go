@@ -30,7 +30,7 @@ func RegisterUser(c *gin.Context) {
 
 	passwordHash, _ := utils.GenerateHash(registerData.Password)
 	newRecord := registerData.ToEntity(passwordHash)
-	errInsert := database.UserRepository.Create(newRecord)
+	errInsert := database.GlobalInstance.UserRepository.Create(newRecord)
 	if errInsert != nil {
 		utils.GinApiResponse(c, 400, fmt.Sprintf(constants.ERR_CREATE_ENTITY, "User"), nil, []string{errInsert.Error()})
 		return

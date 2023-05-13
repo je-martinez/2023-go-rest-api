@@ -13,6 +13,14 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
+var GlobalInstance *MinioApiInstance
+
+func StartGlobalInstance(cfg *config.AWS) (*MinioApiInstance, error) {
+	var err error
+	GlobalInstance, err = New(cfg)
+	return GlobalInstance, err
+}
+
 func New(cfg *config.AWS) (*MinioApiInstance, error) {
 	client, err := minio.New(cfg.Endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(cfg.MinioAccessKey, cfg.MinioSecretKey, ""),
@@ -86,12 +94,4 @@ func (m *MinioApiInstance) DeleteFile(ctx context.Context, bucketName string, ke
 		l.ApiLogger.Error(constants.DELETE_POST_FILE_ERR, err.Error())
 	}
 	return err
-}
-
-var GlobalInstance *MinioApiInstance
-
-func StartGlobalInstance(cfg *config.AWS) (*MinioApiInstance, error) {
-	var err error
-	GlobalInstance, err = New(cfg)
-	return GlobalInstance, err
 }

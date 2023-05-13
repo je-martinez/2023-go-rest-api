@@ -7,7 +7,7 @@ import (
 	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
-	"github.com/je-martinez/2023-go-rest-api/pkg/types"
+	types "github.com/je-martinez/2023-go-rest-api/pkg/types/database"
 	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -36,7 +36,7 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	query := types.QueryOptions{Query: entities.User{UserID: currentUser.UserID}}
-	userFind, notfound, errUserFind := database.UserRepository.Find(query)
+	userFind, notfound, errUserFind := database.GlobalInstance.UserRepository.Find(query)
 
 	if errUserFind != nil {
 		if notfound {
@@ -60,7 +60,7 @@ func UpdateUser(c *gin.Context) {
 	userFind.Fullname = updateData.Fullname
 	userFind.Email = updateData.Email
 
-	_, errUpdate := database.UserRepository.Update(userFind)
+	_, errUpdate := database.GlobalInstance.UserRepository.Update(userFind)
 
 	if errUpdate != nil {
 		utils.GinApiResponse(c, 500, fmt.Sprintf(constants.ERR_UPDATE_ENTITY, "User"), nil, []string{errUpdate.Error()})
@@ -68,7 +68,6 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	utils.GinApiResponse(c, 200, "", userFind.ToDTO(), nil)
-	return
 }
 
 func handlerPasswordChange(oldPassword string, newPassword string, hash string) (string, string, bool) {

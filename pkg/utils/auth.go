@@ -7,7 +7,7 @@ import (
 
 	"github.com/je-martinez/2023-go-rest-api/config"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
-	"github.com/je-martinez/2023-go-rest-api/pkg/types"
+	types "github.com/je-martinez/2023-go-rest-api/pkg/types/auth"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
