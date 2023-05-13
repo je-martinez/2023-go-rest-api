@@ -9,40 +9,33 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var RedisClient *redis.Client
-var ctx = context.Background()
-
-func InitRedisClient(cfg *config.Config) {
-
-	if RedisClient != nil {
-		return
+func New(ctx *context.Context, cfg *config.RedisConfig) *RedisApiInstance {
+	return &RedisApiInstance{
+		ctx: ctx,
+		client: redis.NewClient(&redis.Options{
+			Addr:         cfg.RedisAddr,
+			MinIdleConns: cfg.MinIdleConns,
+			PoolSize:     cfg.PoolSize,
+			PoolTimeout:  time.Duration(cfg.PoolTimeout) * time.Second,
+			Password:     cfg.Password, // no password set
+			DB:           cfg.DB,       // use default DB
+		}),
 	}
-
-	redisHost := cfg.Redis.RedisAddr
-
-	if redisHost == "" {
-		redisHost = ":6379"
-	}
-
-	RedisClient = redis.NewClient(&redis.Options{
-		Addr:         redisHost,
-		MinIdleConns: cfg.Redis.MinIdleConns,
-		PoolSize:     cfg.Redis.PoolSize,
-		PoolTimeout:  time.Duration(cfg.Redis.PoolTimeout) * time.Second,
-		Password:     cfg.Redis.Password, // no password set
-		DB:           cfg.Redis.DB,       // use default DB
-	})
 }
 
-func Add(key string, value interface{}) error {
-	err := RedisClient.Set(ctx, key, value, 0).Err()
-	if err != nil {
-		return err
-	}
-	return nil
+type RedisApiInstance struct {
+	ctx    *context.Context
+	client *redis.Client
 }
 
-func Get(key string) (string, error) {
-	val, err := RedisClient.Get(ctx, key).Result()
-	return val, err
+func (r *RedisApiInstance) Add(key string, value interface{}) error {
+	return r.client.Set(*r.ctx, key, value, 0).Err()
+}
+
+func (r *RedisApiInstance) Remove(key ...string) (int64, error) {
+	return r.client.Del(*r.ctx, key...).Result()
+}
+
+func (r *RedisApiInstance) Get(key string) (string, error) {
+	return r.client.Get(*r.ctx, key).Result()
 }
