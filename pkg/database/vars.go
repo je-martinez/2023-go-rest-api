@@ -7,3 +7,4 @@ import (
 
 var UserRepository *r.GormRepository[e.User]
 var PostRepository *r.GormRepository[e.Post]
+var FileRepository *r.GormRepository[e.File]

@@ -7,11 +7,10 @@ import (
 
 type File struct {
 	FileID    string `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
-	PostId    string
-	CommentId string
+	PostId    *string
+	CommentId *string
 	Name      string
 	Key       string
-	Path      string
 	MimeType  string
 	CreatedBy string
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
@@ -21,12 +20,12 @@ type File struct {
 }
 
 type FileDTO struct {
-	FileID    string `json:"file_id"`
-	PostId    string `json:"post_id"`
-	CommentId string `json:"comment_id"`
-	Name      string `json:"name"`
-	Path      string `json:"path"`
-	MimeType  string `json:"mimetype"`
+	FileID    string  `json:"file_id"`
+	PostId    *string `json:"post_id"`
+	CommentId *string `json:"comment_id"`
+	Name      string  `json:"name"`
+	Key       string  `json:"key"`
+	MimeType  string  `json:"mimetype"`
 }
 
 func (i File) ToDTO() *FileDTO {
@@ -35,14 +34,17 @@ func (i File) ToDTO() *FileDTO {
 		PostId:    i.PostId,
 		CommentId: i.CommentId,
 		Name:      i.Name,
+		Key:       i.Key,
 		MimeType:  i.MimeType,
 	}
 }
 
-func (i File) FromMinioUpload(key string, path string, file multipart.FileHeader) File {
+func (i File) FromMinioUpload(key string, path string, user_id string, post_id string, file multipart.FileHeader) File {
 	return File{
-		Name: file.Filename,
-		Key:  key,
-		Path: path,
+		PostId:    &post_id,
+		Name:      file.Filename,
+		Key:       key,
+		CreatedBy: user_id,
+		MimeType:  file.Header.Get("Content-Type"),
 	}
 }

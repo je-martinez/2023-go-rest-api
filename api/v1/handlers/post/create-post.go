@@ -14,8 +14,8 @@ import (
 	"github.com/je-martinez/2023-go-rest-api/pkg/bucket_manager"
 	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database"
+	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
 	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
-	"github.com/minio/minio-go/v7"
 
 	"github.com/gin-gonic/gin"
 )
@@ -47,7 +47,17 @@ func CreatePost(c *gin.Context) {
 	}
 
 	ctx := context.Background()
-	_, err = handleUploadFiles(ctx, post.Files, currentUser.UserID, newPost.PostID)
+	postFiles, err := handleUploadFiles(ctx, post.Files, currentUser.UserID, newPost.PostID, currentUser.UserID)
+
+	if len(postFiles) > 0 {
+		for _, postFile := range postFiles {
+			err := database.FileRepository.Create(&postFile)
+			if err != nil {
+				utils.GinApiResponse(c, 500, constants.UPLOAD_POST_FILES_ERR, nil, []string{})
+			}
+			newPost.Files = append(newPost.Files, postFile)
+		}
+	}
 
 	if err != nil {
 		utils.GinApiResponse(c, 500, constants.UPLOAD_POST_FILES_ERR, nil, []string{})
@@ -57,14 +67,14 @@ func CreatePost(c *gin.Context) {
 	utils.GinApiResponse(c, 200, "", newPost.ToDTO(), nil)
 }
 
-func handleUploadFiles(ctx context.Context, files []multipart.FileHeader, bucketName string, post_id string) ([]minio.UploadInfo, error) {
+func handleUploadFiles(ctx context.Context, files []multipart.FileHeader, bucketName string, post_id string, current_user string) ([]entities.File, error) {
 
 	if files == nil {
 		//Nothing to do
 		return nil, nil
 	}
 
-	uploads := []minio.UploadInfo{}
+	postFiles := []entities.File{}
 
 	for _, file := range files {
 		tmpFile, err := file.Open()
@@ -78,10 +88,10 @@ func handleUploadFiles(ctx context.Context, files []multipart.FileHeader, bucket
 		if err != nil {
 			return nil, err
 		}
-		uploads = append(uploads, upload)
+		postFiles = append(postFiles, entities.File{}.FromMinioUpload(upload.Key, location, current_user, post_id, file))
 	}
 
-	return uploads, nil
+	return postFiles, nil
 }
 
 func getExtension(filename string) string {
