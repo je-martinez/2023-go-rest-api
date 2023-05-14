@@ -25,10 +25,10 @@ func Me(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 			Query:    entities.User{UserID: currentUser.UserID},
 			Preloads: []string{"Profile"},
 		}
-		userFind, notfound, errUserFind := props.Database.UserRepository.Find(query)
+		userFind, errUserFind, notFound := props.Database.UserRepository.Find(query)
 
 		if errUserFind != nil {
-			if notfound {
+			if notFound {
 				utils.GinApiResponse(c, 404, fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND_ID, "User", currentUser.UserID), nil, nil)
 				return
 			}

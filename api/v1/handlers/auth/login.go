@@ -32,7 +32,7 @@ func Login(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 			Query: entities.User{Username: loginData.Username},
 		}
 
-		foundUser, notFound, err := props.Database.UserRepository.Find(query)
+		foundUser, err, notFound := props.Database.UserRepository.Find(query)
 
 		if err != nil {
 			if notFound {
