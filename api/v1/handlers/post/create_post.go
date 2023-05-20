@@ -82,7 +82,6 @@ func handleUploadFiles(bucketManager *bucket_manager.MinioApiInstance, ctx conte
 		}
 		tmpName := strconv.FormatInt(time.Now().Unix(), 10) + "." + getExtension(file.Filename)
 		location := fmt.Sprintf("posts/%s/%s", post_id, tmpName)
-		ctx := context.Background()
 		upload, err := bucketManager.UploadFile(ctx, bucketName, location, tmpFile, file.Size)
 		if err != nil {
 			return nil, err

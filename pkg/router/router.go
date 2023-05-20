@@ -14,6 +14,7 @@ import (
 )
 
 func New(address string, logger *logger.ApiLogger, props *router_types.RouterHandlerProps) *RouterApiInstance {
+
 	return &RouterApiInstance{
 		props:   props,
 		logger:  logger,
@@ -32,6 +33,8 @@ type RouterApiInstance struct {
 func (r *RouterApiInstance) RegisterRoutes() {
 	publicPath := "/api/v1/public"
 	protectedRelativePath := "/api/v1"
+	//Prevent Crash
+	r.gin.Use(gin.Recovery())
 
 	//Router Groups
 	GinPublic := r.gin.Group(publicPath)
