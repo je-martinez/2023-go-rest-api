@@ -13,4 +13,5 @@ const (
 	UpdateUser = "/user/update"
 	//Post
 	CreatePost = "/post/create"
+	DeletePost = "/post/:post_id"
 )

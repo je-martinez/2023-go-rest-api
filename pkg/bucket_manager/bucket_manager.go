@@ -89,3 +89,21 @@ func (m *MinioApiInstance) DeleteFile(ctx context.Context, bucketName string, ke
 	}
 	return err
 }
+
+func (m *MinioApiInstance) DeleteFolder(ctx context.Context, bucketName string, folderName string) error {
+	if !m.ValidateIfBucketExist(ctx, bucketName) {
+		return errors.New(constants.BUCKET_DOESNT_EXISTS)
+	}
+	objectsToDelete := m.client.ListObjects(ctx, bucketName, minio.ListObjectsOptions{Prefix: folderName, Recursive: true})
+
+	for object := range objectsToDelete {
+		if object.Err != nil {
+			return errors.New(constants.BUCKET_FILE_ERROR)
+		}
+		err := m.client.RemoveObject(ctx, bucketName, object.Key, minio.RemoveObjectOptions{})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

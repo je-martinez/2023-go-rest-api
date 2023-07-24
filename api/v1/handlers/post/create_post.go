@@ -48,7 +48,8 @@ func CreatePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 			return
 		}
 
-		ctx := context.Background()
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
 		postFiles, err := handleUploadFiles(props.BucketManager, ctx, post.Files, currentUser.UserID, newPost.PostID, currentUser.UserID)
 
 		if len(postFiles) > 0 {

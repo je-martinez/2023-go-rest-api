@@ -35,7 +35,8 @@ func RegisterUser(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 			return
 		}
 
-		ctx := context.Background()
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
 
 		bucketCreated := props.BucketManager.CreateBucket(ctx, newRecord.UserID, constants.US_EAST_NORTH_VIRGINIA)
 

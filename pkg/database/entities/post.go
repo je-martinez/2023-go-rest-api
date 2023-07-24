@@ -12,11 +12,11 @@ type Post struct {
 	CreatedBy     string
 	CreatedAt     time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
 	UpdatedBy     string
-	UpdatedAt     time.Time `gorm:"default:null"`
-	Active        bool      `gorm:"default:true"`
-	Comments      []Comment
-	Files         []File
-	Reactions     []Reaction
+	UpdatedAt     time.Time  `gorm:"default:null"`
+	Active        bool       `gorm:"default:true"`
+	Comments      []Comment  `gorm:"constraint:OnDelete:CASCADE;"`
+	Files         []File     `gorm:"constraint:OnDelete:CASCADE;"`
+	Reactions     []Reaction `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 type PostDTO struct {
