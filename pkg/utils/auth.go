@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/je-martinez/2023-go-rest-api/config"
+	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
 	types "github.com/je-martinez/2023-go-rest-api/pkg/types/auth"
 
@@ -59,9 +60,17 @@ func TokenValid(c *gin.Context) error {
 	return nil
 }
 
-func ExtractUserFromToken(c *gin.Context) (*types.CurrentUser, error) {
-	SECRET_KEY := config.AppConfig.Server.JwtSecretKey
+func ExtractUserFromToken(c *gin.Context, storeIntoContext bool) (*types.CurrentUser, error) {
 	tokenString := ExtractToken(c)
+	user, err := GetUserFromTokenStr(tokenString)
+	if storeIntoContext && err == nil {
+		c.Set(constants.CURRENT_USER_KEY_CTX, user)
+	}
+	return user, err
+}
+
+func GetUserFromTokenStr(tokenString string) (*types.CurrentUser, error) {
+	SECRET_KEY := config.AppConfig.Server.JwtSecretKey
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])

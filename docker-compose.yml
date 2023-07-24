@@ -18,6 +18,7 @@ services:
     ports:
       - "6379:6379"
     restart: always
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_HOST_PASSWORD"
     healthcheck:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 10s

@@ -39,6 +39,7 @@ func AuthMiddleware(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		}
 
 		if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+			utils.ExtractUserFromToken(c, true)
 			c.Next()
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})

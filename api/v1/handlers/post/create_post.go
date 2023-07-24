@@ -13,6 +13,7 @@ import (
 	"github.com/je-martinez/2023-go-rest-api/pkg/bucket_manager"
 	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
+	auth_types "github.com/je-martinez/2023-go-rest-api/pkg/types/auth"
 	router_types "github.com/je-martinez/2023-go-rest-api/pkg/types/router"
 	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
 
@@ -21,12 +22,14 @@ import (
 
 func CreatePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 	return gin.HandlerFunc(func(c *gin.Context) {
-		currentUser, errCurrentUser := utils.ExtractUserFromToken(c)
+		tmpCurrentUser, errCurrentUser := c.Get(constants.CURRENT_USER_KEY_CTX)
 
-		if errCurrentUser != nil || currentUser == nil {
-			utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, utils.ValidateStructErrors(errCurrentUser))
+		if !errCurrentUser {
+			utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, nil)
 			return
 		}
+
+		currentUser := tmpCurrentUser.(*auth_types.CurrentUser)
 
 		var post DTOs.CreatePostDTO
 
@@ -41,7 +44,7 @@ func CreatePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		err = props.Database.PostRepository.Create(newPost)
 
 		if err != nil {
-			utils.GinApiResponse(c, 500, constants.CREATE_POST_ERR, nil, utils.ValidateStructErrors(errCurrentUser))
+			utils.GinApiResponse(c, 500, constants.CREATE_POST_ERR, nil, utils.ValidateStructErrors(err))
 			return
 		}
 

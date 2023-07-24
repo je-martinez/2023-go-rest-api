@@ -6,6 +6,7 @@ import (
 	"github.com/je-martinez/2023-go-rest-api/pkg/DTOs"
 	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
+	auth_types "github.com/je-martinez/2023-go-rest-api/pkg/types/auth"
 	types "github.com/je-martinez/2023-go-rest-api/pkg/types/database"
 	router_types "github.com/je-martinez/2023-go-rest-api/pkg/types/router"
 	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
@@ -28,12 +29,14 @@ func UpdateUser(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 			return
 		}
 
-		currentUser, errCurrentUser := utils.ExtractUserFromToken(c)
+		tmpCurrentUser, errCurrentUser := c.Get(constants.CURRENT_USER_KEY_CTX)
 
-		if errCurrentUser != nil || currentUser == nil {
-			utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, utils.ValidateStructErrors(errCurrentUser))
+		if !errCurrentUser {
+			utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, nil)
 			return
 		}
+
+		currentUser := tmpCurrentUser.(*auth_types.CurrentUser)
 
 		query := types.QueryOptions{Query: entities.User{UserID: currentUser.UserID}}
 		userFind, errUserFind, notFound := props.Database.UserRepository.Find(query)
