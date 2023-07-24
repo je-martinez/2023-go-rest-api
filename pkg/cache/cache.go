@@ -1,47 +1,40 @@
 package cache
 
 import (
-	"context"
-	"main/config"
 	"time"
+
+	"context"
+
+	"github.com/je-martinez/2023-go-rest-api/config"
 
 	"github.com/redis/go-redis/v9"
 )
 
-var RedisClient *redis.Client
-var ctx = context.Background()
-
-func InitRedisClient(cfg *config.Config) {
-
-	if RedisClient != nil {
-		return
+func New(cfg *config.RedisConfig) *RedisApiInstance {
+	return &RedisApiInstance{
+		client: redis.NewClient(&redis.Options{
+			Addr:         cfg.RedisAddr,
+			MinIdleConns: cfg.MinIdleConns,
+			PoolSize:     cfg.PoolSize,
+			PoolTimeout:  time.Duration(cfg.PoolTimeout) * time.Second,
+			Password:     cfg.Password, // no password set
+			DB:           cfg.DB,       // use default DB
+		}),
 	}
-
-	redisHost := cfg.Redis.RedisAddr
-
-	if redisHost == "" {
-		redisHost = ":6379"
-	}
-
-	RedisClient = redis.NewClient(&redis.Options{
-		Addr:         redisHost,
-		MinIdleConns: cfg.Redis.MinIdleConns,
-		PoolSize:     cfg.Redis.PoolSize,
-		PoolTimeout:  time.Duration(cfg.Redis.PoolTimeout) * time.Second,
-		Password:     cfg.Redis.Password, // no password set
-		DB:           cfg.Redis.DB,       // use default DB
-	})
 }
 
-func Add(key string, value interface{}) error {
-	err := RedisClient.Set(ctx, key, value, 0).Err()
-	if err != nil {
-		return err
-	}
-	return nil
+type RedisApiInstance struct {
+	client *redis.Client
 }
 
-func Get(key string) (string, error) {
-	val, err := RedisClient.Get(ctx, key).Result()
-	return val, err
+func (r *RedisApiInstance) Add(ctx context.Context, key string, value interface{}) error {
+	return r.client.Set(ctx, key, value, 0).Err()
+}
+
+func (r *RedisApiInstance) Remove(ctx context.Context, key ...string) (int64, error) {
+	return r.client.Del(ctx, key...).Result()
+}
+
+func (r *RedisApiInstance) Get(ctx context.Context, key string) (string, error) {
+	return r.client.Get(ctx, key).Result()
 }

@@ -2,17 +2,18 @@ package middleware
 
 import (
 	"fmt"
-	"main/config"
-	"main/pkg/utils"
 	"net/http"
+
+	router_types "github.com/je-martinez/2023-go-rest-api/pkg/types/router"
+	"github.com/je-martinez/2023-go-rest-api/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
+func AuthMiddleware(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		SECRET_KEY := config.AppConfig.Server.JwtSecretKey
+		SECRET_KEY := props.Config.JwtSecretKey
 		tokenString := utils.ExtractToken(c)
 
 		if tokenString == "" {
@@ -38,6 +39,11 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+			_, err := utils.ExtractUserFromToken(c, true)
+			if err != nil {
+				c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+				c.Abort()
+			}
 			c.Next()
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})

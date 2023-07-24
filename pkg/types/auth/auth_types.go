@@ -1,4 +1,4 @@
-package types
+package auth_types
 
 import (
 	"fmt"

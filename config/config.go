@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	constants "main/pkg/constants"
+	constants "github.com/je-martinez/2023-go-rest-api/pkg/constants"
 
 	"github.com/spf13/viper"
 )

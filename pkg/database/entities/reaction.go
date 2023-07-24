@@ -1,8 +1,9 @@
 package entities
 
 import (
-	dbe "main/pkg/database/extensions"
 	"time"
+
+	dbe "github.com/je-martinez/2023-go-rest-api/pkg/database/extensions"
 )
 
 type Reaction struct {

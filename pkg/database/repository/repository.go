@@ -2,7 +2,8 @@ package repository
 
 import (
 	"errors"
-	"main/pkg/types"
+
+	types "github.com/je-martinez/2023-go-rest-api/pkg/types/database"
 
 	"gorm.io/gorm"
 )
@@ -20,31 +21,34 @@ func (r *GormRepository[T]) Create(entity *T) error {
 	return r.db.Create(entity).Error
 }
 
-func (r *GormRepository[T]) FindByID(id uint, preloads ...string) (*T, bool, error) {
+func (r *GormRepository[T]) CreateBatch(entity []T) error {
+	return r.db.Create(entity).Error
+}
+func (r *GormRepository[T]) FindByID(id uint, preloads ...string) (*T, error, bool) {
 	var entity T
 	err := r.DBWithPreloads(preloads).First(&entity, id).Error
 	if err != nil {
-		return nil, errors.Is(err, gorm.ErrRecordNotFound), err
+		return nil, err, errors.Is(err, gorm.ErrRecordNotFound)
 	}
-	return &entity, false, nil
+	return &entity, nil, false
 }
 
-func (r *GormRepository[T]) FindByStringID(id string, preloads ...string) (*T, bool, error) {
+func (r *GormRepository[T]) FindByStringID(id string, preloads ...string) (*T, error, bool) {
 	var entity T
 	err := r.DBWithPreloads(preloads).First(&entity, "id = ?", id).Error
 	if err != nil {
-		return nil, errors.Is(err, gorm.ErrRecordNotFound), err
+		return nil, err, errors.Is(err, gorm.ErrRecordNotFound)
 	}
-	return &entity, false, nil
+	return &entity, nil, false
 }
 
-func (r *GormRepository[T]) Find(options types.QueryOptions) (*T, bool, error) {
+func (r *GormRepository[T]) Find(options types.QueryOptions) (*T, error, bool) {
 	var entity T
 	err := r.DBWithPreloads(options.Preloads).Where(options.Query, options.Args).First(&entity).Error
 	if err != nil {
-		return nil, errors.Is(err, gorm.ErrRecordNotFound), err
+		return nil, err, errors.Is(err, gorm.ErrRecordNotFound)
 	}
-	return &entity, false, nil
+	return &entity, nil, false
 }
 
 func (r *GormRepository[T]) Update(entity *T) (bool, error) {

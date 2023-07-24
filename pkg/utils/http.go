@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"main/pkg/types"
 	"net/http"
+
+	types "github.com/je-martinez/2023-go-rest-api/pkg/types/http"
 
 	"github.com/gin-gonic/gin"
 )

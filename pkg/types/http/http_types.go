@@ -1,4 +1,4 @@
-package types
+package http_types
 
 type ApiResponse struct {
 	OK         bool        `json:"ok"`

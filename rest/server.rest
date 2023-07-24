@@ -7,9 +7,22 @@ GET {{BaseURL}}/public/health
 Content-Type: application/json
 
 
+### Login User
+# @name login
+@BaseURL=http://localhost:4500/api/v1
+
+POST {{BaseURL}}/public/auth/login
+Content-Type: application/json
+
+{
+    "username":"je-martinez",
+    "password": "testing-pass"   
+}
+
+
 ### Health with Authentication
 
-@Token=abc
+@Token= {{login.response.body.$.data.token}}
 
 GET {{BaseURL}}/health-with-auth
 Content-Type: application/json

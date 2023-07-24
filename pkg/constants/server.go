@@ -1,7 +1,9 @@
 package constants
 
-const API_RUNNING = "API Running, Port%v"
-const DB_RUNNING = "Connected to database: OK!"
-const REDIS_RUNNING = "Connected to Redis Instance: OK!"
-
-const API_RUNNING_ERROR = "Unable to start server: %v"
+const (
+	API_RUNNING          = "API Running, Port%v"
+	DB_RUNNING           = "Connected to database: OK!"
+	REDIS_RUNNING        = "Connected to Redis Instance: OK!"
+	API_RUNNING_ERROR    = "Unable to start server: %v"
+	CURRENT_USER_KEY_CTX = "CurrentUser"
+)
