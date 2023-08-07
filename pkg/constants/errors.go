@@ -16,6 +16,7 @@ const (
 	ERR_ENTITY_NOT_FOUND_ID = "%s not found with id: %s"
 	ERR_FIND_ENTITY         = "Unable to trying to retrive entity %s"
 	ERR_CREATE_ENTITY       = "Unable to create entity %s"
+	ERR_DELETE_ENTITY       = "Unable to delete entity %s"
 	ERR_UPDATE_ENTITY       = "Unable to update entity %s"
 )
 

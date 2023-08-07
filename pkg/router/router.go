@@ -60,7 +60,8 @@ func (r *RouterApiInstance) RegisterRoutes() {
 		GinProtected.DELETE(constants.DeletePost, post_handlers.DeletePost(r.props))
 
 		//Reactions
-		GinProtected.POST(constants.CreateReaction, reactions_handlers.AddPostReaction(r.props))
+		GinProtected.POST(constants.CreatePostReaction, reactions_handlers.AddPostReaction(r.props))
+		GinProtected.DELETE(constants.DeletePostReaction, reactions_handlers.RemovePostReaction(r.props))
 
 		//Server
 		GinProtected.GET(constants.HealthAuth, server_handlers.Health(r.props))
