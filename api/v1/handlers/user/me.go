@@ -18,7 +18,8 @@ func Me(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		tmpCurrentUser, errCurrentUser := c.Get(constants.CURRENT_USER_KEY_CTX)
 
 		if !errCurrentUser {
-			utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, nil)
+			msg := constants.ERR_CURRENT_USER
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
@@ -32,13 +33,15 @@ func Me(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 
 		if errUserFind != nil {
 			if notFound {
-				utils.GinApiResponse(c, 404, fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND_ID, "User", currentUser.UserID), nil, nil)
+				msg := fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND_ID, "User", currentUser.UserID)
+				utils.GinApiResponse(c, 404, &msg, nil, nil)
 				return
 			}
-			utils.GinApiResponse(c, 500, fmt.Sprintf(constants.ERR_FIND_ENTITY, "User"), nil, nil)
+			msg := fmt.Sprintf(constants.ERR_FIND_ENTITY, "User")
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
-		utils.GinApiResponse(c, 200, "", userFind.ToDTO(), nil)
+		utils.GinApiResponse(c, 200, nil, userFind.ToDTO(), nil)
 	})
 }

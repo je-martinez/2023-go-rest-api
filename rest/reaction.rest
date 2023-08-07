@@ -13,17 +13,15 @@ Content-Type: application/json
 
 @Token= {{login.response.body.$.data.token}}
 
-### Create New Reaction
+@PostID=valid_post_id
 
-@PostID=58503e65-50dd-4f8f-a8dc-be59aaac2ea9
+### Create New Reaction
 
 POST {{BaseURL}}/reaction/post/{{PostID}}/love
 Content-Type: application/json
 Authorization: Bearer {{Token}}
 
 ### Delete Reaction
-
-@PostID=58503e65-50dd-4f8f-a8dc-be59aaac2ea9
 
 DELETE {{BaseURL}}/reaction/post/{{PostID}}/love
 Content-Type: application/json

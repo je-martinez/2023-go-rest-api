@@ -25,7 +25,8 @@ func CreatePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		tmpCurrentUser, errCurrentUser := c.Get(constants.CURRENT_USER_KEY_CTX)
 
 		if !errCurrentUser {
-			utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, nil)
+			msg := constants.ERR_CURRENT_USER
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
@@ -35,7 +36,8 @@ func CreatePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 
 		err := c.ShouldBind(&post)
 		if err != nil {
-			utils.GinApiResponse(c, 400, constants.ERR_BIND_MULTIPART, nil, []string{err.Error()})
+			msg := constants.ERR_BIND_MULTIPART
+			utils.GinApiResponse(c, 400, &msg, nil, []string{err.Error()})
 			return
 		}
 
@@ -44,7 +46,8 @@ func CreatePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		err = props.Database.PostRepository.Create(newPost)
 
 		if err != nil {
-			utils.GinApiResponse(c, 500, constants.CREATE_POST_ERR, nil, utils.ValidateStructErrors(err))
+			msg := constants.CREATE_POST_ERR
+			utils.GinApiResponse(c, 500, &msg, nil, utils.ValidateStructErrors(err))
 			return
 		}
 
@@ -55,18 +58,19 @@ func CreatePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		if len(postFiles) > 0 {
 			err := props.Database.FileRepository.CreateBatch(postFiles)
 			if err != nil {
-				utils.GinApiResponse(c, 500, constants.UPLOAD_POST_FILES_ERR, nil, []string{})
+				msg := constants.UPLOAD_POST_FILES_ERR
+				utils.GinApiResponse(c, 500, &msg, nil, []string{})
 			}
 			newPost.Files = append(newPost.Files, postFiles...)
-
 		}
 
 		if err != nil {
-			utils.GinApiResponse(c, 500, constants.UPLOAD_POST_FILES_ERR, nil, []string{})
+			msg := constants.UPLOAD_POST_FILES_ERR
+			utils.GinApiResponse(c, 500, &msg, nil, []string{})
 			return
 		}
 
-		utils.GinApiResponse(c, 200, "", newPost.ToDTO(), nil)
+		utils.GinApiResponse(c, 200, nil, newPost.ToDTO(), nil)
 	})
 }
 

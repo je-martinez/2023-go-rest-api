@@ -17,13 +17,15 @@ func RegisterUser(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		var registerData DTOs.RegisterUserDTO
 		err := c.BindJSON(&registerData)
 		if err != nil {
-			utils.GinApiResponse(c, 400, constants.ERR_BIND_JSON, nil, []string{err.Error()})
+			msg := constants.ERR_BIND_JSON
+			utils.GinApiResponse(c, 400, &msg, nil, []string{err.Error()})
 			return
 		}
 
 		err = validate.Struct(registerData)
 		if err != nil {
-			utils.GinApiResponse(c, 400, constants.ERR_INVALID_JSON, nil, utils.ValidateStructErrors(err))
+			msg := constants.ERR_INVALID_JSON
+			utils.GinApiResponse(c, 400, &msg, nil, utils.ValidateStructErrors(err))
 			return
 		}
 
@@ -31,7 +33,8 @@ func RegisterUser(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		newRecord := registerData.ToEntity(passwordHash)
 		errInsert := props.Database.UserRepository.Create(newRecord)
 		if errInsert != nil {
-			utils.GinApiResponse(c, 400, fmt.Sprintf(constants.ERR_CREATE_ENTITY, "User"), nil, []string{errInsert.Error()})
+			msg := fmt.Sprintf(constants.ERR_CREATE_ENTITY, "User")
+			utils.GinApiResponse(c, 400, &msg, nil, []string{errInsert.Error()})
 			return
 		}
 
@@ -41,14 +44,16 @@ func RegisterUser(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		bucketCreated := props.BucketManager.CreateBucket(ctx, newRecord.UserID, constants.US_EAST_NORTH_VIRGINIA)
 
 		if !bucketCreated {
-			utils.GinApiResponse(c, 500, fmt.Sprintf(constants.BUCKET_CREATION_USER_ERROR, newRecord.UserID), nil, []string{errInsert.Error()})
+			msg := fmt.Sprintf(constants.BUCKET_CREATION_USER_ERROR, newRecord.UserID)
+			utils.GinApiResponse(c, 500, &msg, nil, []string{errInsert.Error()})
 			return
 		}
 
 		token, err := utils.GenerateToken(*newRecord)
 
 		if err != nil {
-			utils.GinApiResponse(c, 500, constants.ERR_GENERATE_TOKEN, nil, nil)
+			msg := constants.ERR_GENERATE_TOKEN
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
@@ -60,6 +65,6 @@ func RegisterUser(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 			Token:    token,
 		}
 
-		utils.GinApiResponse(c, 200, "", responseData, nil)
+		utils.GinApiResponse(c, 200, nil, responseData, nil)
 	})
 }

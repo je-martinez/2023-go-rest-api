@@ -19,7 +19,8 @@ func AddPostReaction(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		tmpCurrentUser, errCurrentUser := c.Get(constants.CURRENT_USER_KEY_CTX)
 
 		if !errCurrentUser {
-			utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, nil)
+			msg := constants.ERR_CURRENT_USER
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
@@ -30,7 +31,8 @@ func AddPostReaction(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 
 		isValidReaction, Reaction := utils.IsSupportedReaction(reaction_type)
 		if !isValidReaction {
-			utils.GinApiResponse(c, 404, fmt.Sprintf(constants.UNSUPPORTED_REACTION, reaction_type), nil, nil)
+			msg := fmt.Sprintf(constants.UNSUPPORTED_REACTION, reaction_type)
+			utils.GinApiResponse(c, 404, &msg, nil, nil)
 			return
 		}
 
@@ -43,10 +45,12 @@ func AddPostReaction(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 
 		if err != nil {
 			if postNotFound {
-				utils.GinApiResponse(c, 404, fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND_ID, "Post", post_id), nil, nil)
+				msg := fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND_ID, "Post", post_id)
+				utils.GinApiResponse(c, 404, &msg, nil, nil)
 				return
 			}
-			utils.GinApiResponse(c, 500, fmt.Sprintf(constants.ERR_FIND_ENTITY, "Post"), nil, nil)
+			msg := fmt.Sprintf(constants.ERR_FIND_ENTITY, "Post")
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
@@ -57,7 +61,8 @@ func AddPostReaction(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 
 		reaction, _, _ := props.Database.ReactionRepository.Find(query)
 		if reaction != nil {
-			utils.GinApiResponse(c, 409, constants.REACTION_ALREADY_PRESENT, nil, nil)
+			msg := constants.REACTION_ALREADY_PRESENT
+			utils.GinApiResponse(c, 409, &msg, nil, nil)
 			return
 		}
 
@@ -72,10 +77,11 @@ func AddPostReaction(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		err = props.Database.ReactionRepository.Create(entity)
 
 		if err != nil {
-			utils.GinApiResponse(c, 400, fmt.Sprintf(constants.ERR_CREATE_ENTITY, "Reaction"), nil, nil)
+			msg := fmt.Sprintf(constants.ERR_CREATE_ENTITY, "Reaction")
+			utils.GinApiResponse(c, 400, &msg, nil, nil)
 			return
 		}
 
-		utils.GinApiResponse(c, 200, "", entity.ToDTO(), nil)
+		utils.GinApiResponse(c, 200, nil, entity.ToDTO(), nil)
 	})
 }

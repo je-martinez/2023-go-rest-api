@@ -11,7 +11,8 @@ import (
 
 func Health(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 	return gin.HandlerFunc(func(c *gin.Context) {
-		utils.GinApiResponse(c, 200, constants.MSG_HEALTH, nil, nil)
+		msg := constants.MSG_HEALTH
+		utils.GinApiResponse(c, 200, &msg, nil, nil)
 	})
 }
 
