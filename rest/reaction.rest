@@ -1,0 +1,22 @@
+### Login User
+
+@BaseURL=http://localhost:4500/api/v1
+
+# @name login
+POST {{BaseURL}}/public/auth/login
+Content-Type: application/json
+
+{
+    "username":"je-martinez",
+    "password": "testing-pass"   
+}
+
+@Token= {{login.response.body.$.data.token}}
+
+### Create New Reaction
+
+@PostID=58503e65-50dd-4f8f-a8dc-be59aaac2ea9
+
+POST {{BaseURL}}/reaction/post/{{PostID}}/love
+Content-Type: application/json
+Authorization: Bearer {{Token}}

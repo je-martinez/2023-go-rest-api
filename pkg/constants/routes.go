@@ -14,4 +14,6 @@ const (
 	//Post
 	CreatePost = "/post/create"
 	DeletePost = "/post/:post_id"
+	//Reaction
+	CreateReaction = "/reaction/post/:post_id/:reaction_type"
 )
