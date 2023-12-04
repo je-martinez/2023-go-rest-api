@@ -18,13 +18,15 @@ func Login(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		var loginData DTOs.LoginDTO
 		err := c.BindJSON(&loginData)
 		if err != nil {
-			utils.GinApiResponse(c, 400, constants.ERR_BIND_JSON, nil, []string{err.Error()})
+			msg := constants.ERR_BIND_JSON
+			utils.GinApiResponse(c, 400, &msg, nil, []string{err.Error()})
 			return
 		}
 
 		err = validate.Struct(loginData)
 		if err != nil {
-			utils.GinApiResponse(c, 400, constants.ERR_INVALID_JSON, nil, utils.ValidateStructErrors(err))
+			msg := constants.ERR_INVALID_JSON
+			utils.GinApiResponse(c, 400, &msg, nil, utils.ValidateStructErrors(err))
 			return
 		}
 
@@ -36,7 +38,8 @@ func Login(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 
 		if err != nil {
 			if notFound {
-				utils.GinApiResponse(c, 404, fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND, "User"), nil, nil)
+				msg := fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND, "User")
+				utils.GinApiResponse(c, 404, &msg, nil, nil)
 				return
 			}
 		}
@@ -44,14 +47,16 @@ func Login(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		isPasswordValid := utils.CheckPasswordHash(loginData.Password, foundUser.PasswordHash)
 
 		if !isPasswordValid {
-			utils.GinApiResponse(c, 401, constants.ERR_USERNAME_PASSWORD_INVALID, nil, nil)
+			msg := constants.ERR_USERNAME_PASSWORD_INVALID
+			utils.GinApiResponse(c, 401, &msg, nil, nil)
 			return
 		}
 
 		token, err := utils.GenerateToken(*foundUser)
 
 		if err != nil {
-			utils.GinApiResponse(c, 500, constants.ERR_GENERATE_TOKEN, nil, nil)
+			msg := constants.ERR_GENERATE_TOKEN
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
@@ -63,6 +68,6 @@ func Login(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 			Token:    token,
 		}
 
-		utils.GinApiResponse(c, 200, "", responseData, nil)
+		utils.GinApiResponse(c, 200, nil, responseData, nil)
 	})
 }

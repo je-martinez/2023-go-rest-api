@@ -8,11 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GinApiResponse(c *gin.Context, statusCode int, message string, data any, err any) {
+func GinApiResponse(c *gin.Context, statusCode int, message *string, data any, err any) {
 	c.JSON(http.StatusOK, apiResponse(statusCode, message, data, err))
 }
 
-func apiResponse(statusCode int, message string, data any, err any) (response *types.ApiResponse) {
+func apiResponse(statusCode int, message *string, data any, err any) (response *types.ApiResponse) {
 
 	return &types.ApiResponse{
 		OK:         isResponseSuccess(statusCode),

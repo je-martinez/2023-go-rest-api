@@ -11,7 +11,7 @@ type Post struct {
 	Comment_Count int64 `gorm:"default:0"`
 	CreatedBy     string
 	CreatedAt     time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
-	UpdatedBy     string
+	UpdatedBy     *string
 	UpdatedAt     time.Time  `gorm:"default:null"`
 	Active        bool       `gorm:"default:true"`
 	Comments      []Comment  `gorm:"constraint:OnDelete:CASCADE;"`

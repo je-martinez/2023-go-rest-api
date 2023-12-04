@@ -11,7 +11,7 @@ type Comment struct {
 	Content   string
 	CreatedBy string
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP()"`
-	UpdatedBy string
+	UpdatedBy *string
 	UpdatedAt time.Time `gorm:"default:null"`
 	Active    bool      `gorm:"default:true"`
 	File      *File

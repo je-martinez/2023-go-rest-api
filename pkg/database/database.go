@@ -21,7 +21,7 @@ func New(cfg *config.DatabaseConfig, logger *logger.ApiLogger) (*DatabaseApiInst
 		return nil, err
 	}
 	//Auto migrations
-	errAutoMigrate := database.AutoMigrate(&e.User{}, &e.Profile{}, e.Post{}, e.Comment{}, e.File{})
+	errAutoMigrate := database.AutoMigrate(&e.User{}, &e.Profile{}, e.Post{}, e.Comment{}, e.File{}, e.Reaction{})
 	if errAutoMigrate != nil {
 		logger.Fatal(constants.DB_MIGRATION_ERROR, err)
 		return nil, errAutoMigrate
@@ -29,20 +29,22 @@ func New(cfg *config.DatabaseConfig, logger *logger.ApiLogger) (*DatabaseApiInst
 	//Repositories
 	logger.Info(constants.DB_RUNNING)
 	return &DatabaseApiInstance{
-		db:             database,
-		logger:         logger,
-		UserRepository: repository.NewRepository[e.User](database, nil),
-		PostRepository: repository.NewRepository[e.Post](database, nil),
-		FileRepository: repository.NewRepository[e.File](database, nil),
+		db:                 database,
+		logger:             logger,
+		UserRepository:     repository.NewRepository[e.User](database, nil),
+		PostRepository:     repository.NewRepository[e.Post](database, nil),
+		FileRepository:     repository.NewRepository[e.File](database, nil),
+		ReactionRepository: repository.NewRepository[e.Reaction](database, nil),
 	}, nil
 }
 
 type DatabaseApiInstance struct {
-	db             *gorm.DB
-	logger         *logger.ApiLogger
-	UserRepository *repository.GormRepository[e.User]
-	PostRepository *repository.GormRepository[e.Post]
-	FileRepository *repository.GormRepository[e.File]
+	db                 *gorm.DB
+	logger             *logger.ApiLogger
+	UserRepository     *repository.GormRepository[e.User]
+	PostRepository     *repository.GormRepository[e.Post]
+	FileRepository     *repository.GormRepository[e.File]
+	ReactionRepository *repository.GormRepository[e.Reaction]
 }
 
 func getConnectionString(cfg *config.DatabaseConfig) string {

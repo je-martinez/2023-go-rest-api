@@ -19,20 +19,23 @@ func UpdateUser(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		var updateData DTOs.UpdateUserDTO
 		err := c.BindJSON(&updateData)
 		if err != nil {
-			utils.GinApiResponse(c, 400, constants.ERR_BIND_JSON, nil, []string{err.Error()})
+			msg := constants.ERR_BIND_JSON
+			utils.GinApiResponse(c, 400, &msg, nil, []string{err.Error()})
 			return
 		}
 
 		err = validate.Struct(updateData)
 		if err != nil {
-			utils.GinApiResponse(c, 400, constants.ERR_INVALID_JSON, nil, utils.ValidateStructErrors(err))
+			msg := constants.ERR_INVALID_JSON
+			utils.GinApiResponse(c, 400, &msg, nil, utils.ValidateStructErrors(err))
 			return
 		}
 
 		tmpCurrentUser, errCurrentUser := c.Get(constants.CURRENT_USER_KEY_CTX)
 
 		if !errCurrentUser {
-			utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, nil)
+			msg := constants.ERR_CURRENT_USER
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
@@ -43,17 +46,19 @@ func UpdateUser(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 
 		if errUserFind != nil {
 			if notFound {
-				utils.GinApiResponse(c, 404, fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND_ID, "User", currentUser.UserID), nil, nil)
+				msg := fmt.Sprintf(constants.ERR_ENTITY_NOT_FOUND_ID, "User", currentUser.UserID)
+				utils.GinApiResponse(c, 404, &msg, nil, nil)
 				return
 			}
-			utils.GinApiResponse(c, 500, fmt.Sprintf(constants.ERR_FIND_ENTITY, "User"), nil, nil)
+			msg := fmt.Sprintf(constants.ERR_FIND_ENTITY, "User")
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
 		errMsg, newPasswordHash, hasErr := handlerPasswordChange(updateData.OldPassword, updateData.NewPassword, userFind.PasswordHash)
 
 		if hasErr {
-			utils.GinApiResponse(c, 400, errMsg, nil, nil)
+			utils.GinApiResponse(c, 400, &errMsg, nil, nil)
 			return
 		}
 
@@ -66,11 +71,12 @@ func UpdateUser(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		_, errUpdate := props.Database.UserRepository.Update(userFind)
 
 		if errUpdate != nil {
-			utils.GinApiResponse(c, 500, fmt.Sprintf(constants.ERR_UPDATE_ENTITY, "User"), nil, []string{errUpdate.Error()})
+			msg := fmt.Sprintf(constants.ERR_UPDATE_ENTITY, "User")
+			utils.GinApiResponse(c, 500, &msg, nil, []string{errUpdate.Error()})
 			return
 		}
 
-		utils.GinApiResponse(c, 200, "", userFind.ToDTO(), nil)
+		utils.GinApiResponse(c, 200, nil, userFind.ToDTO(), nil)
 	})
 }
 

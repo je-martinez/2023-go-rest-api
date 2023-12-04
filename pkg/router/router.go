@@ -3,6 +3,7 @@ package router
 import (
 	auth_handlers "github.com/je-martinez/2023-go-rest-api/api/v1/handlers/auth"
 	post_handlers "github.com/je-martinez/2023-go-rest-api/api/v1/handlers/post"
+	reactions_handlers "github.com/je-martinez/2023-go-rest-api/api/v1/handlers/reactions"
 	server_handlers "github.com/je-martinez/2023-go-rest-api/api/v1/handlers/server"
 	user_handlers "github.com/je-martinez/2023-go-rest-api/api/v1/handlers/user"
 	"github.com/je-martinez/2023-go-rest-api/api/v1/middleware"
@@ -57,6 +58,10 @@ func (r *RouterApiInstance) RegisterRoutes() {
 		//Post
 		GinProtected.POST(constants.CreatePost, post_handlers.CreatePost(r.props))
 		GinProtected.DELETE(constants.DeletePost, post_handlers.DeletePost(r.props))
+
+		//Reactions
+		GinProtected.POST(constants.CreatePostReaction, reactions_handlers.AddPostReaction(r.props))
+		GinProtected.DELETE(constants.DeletePostReaction, reactions_handlers.RemovePostReaction(r.props))
 
 		//Server
 		GinProtected.GET(constants.HealthAuth, server_handlers.Health(r.props))

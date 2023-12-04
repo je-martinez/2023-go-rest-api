@@ -1,5 +1,7 @@
 package db_extensions
 
+import "fmt"
+
 type SignInProviderType string
 
 const (
@@ -9,7 +11,15 @@ const (
 )
 
 const (
-	LIKE = "like"
+	LOVE ReactionType = "love"
 )
 
+func GetSupportedReactions() []ReactionType {
+	return []ReactionType{LOVE}
+}
+
 type ReactionType string
+
+func (r ReactionType) ToString() string {
+	return fmt.Sprint(r)
+}

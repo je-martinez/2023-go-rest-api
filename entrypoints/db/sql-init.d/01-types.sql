@@ -7,4 +7,4 @@ CREATE TYPE IF NOT EXISTS public.sign_in_provider_type AS ENUM (
     'apple');
 
 CREATE TYPE IF NOT EXISTS public.reaction_type AS ENUM (
-    'like');
+    'love');

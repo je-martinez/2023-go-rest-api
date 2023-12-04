@@ -20,7 +20,8 @@ func DeletePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		tmpCurrentUser, errCurrentUser := c.Get(constants.CURRENT_USER_KEY_CTX)
 
 		if !errCurrentUser {
-			utils.GinApiResponse(c, 500, constants.ERR_CURRENT_USER, nil, nil)
+			msg := constants.ERR_CURRENT_USER
+			utils.GinApiResponse(c, 500, &msg, nil, nil)
 			return
 		}
 
@@ -38,23 +39,26 @@ func DeletePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 
 		if err != nil {
 			if notFound {
-				utils.GinApiResponse(c, 400, fmt.Sprintf(constants.POST_NOT_FOUND, post_id), nil, []string{err.Error()})
+				msg := fmt.Sprintf(constants.POST_NOT_FOUND, post_id)
+				utils.GinApiResponse(c, 400, &msg, nil, []string{err.Error()})
 				return
 			}
-			utils.GinApiResponse(c, 400, fmt.Sprintf(constants.FETCH_POST_FAILED, post_id), nil, []string{err.Error()})
+			msg := fmt.Sprintf(constants.FETCH_POST_FAILED, post_id)
+			utils.GinApiResponse(c, 400, &msg, nil, []string{err.Error()})
 			return
 		}
 
 		_, err = props.Database.PostRepository.Delete(&entities.Post{PostID: post_id})
 
 		if err != nil {
-			utils.GinApiResponse(c, 500, constants.DELETE_POST_ERR, nil, []string{err.Error()})
+			msg := constants.DELETE_POST_ERR
+			utils.GinApiResponse(c, 500, &msg, nil, []string{err.Error()})
 			return
 		}
 
 		go handleDeleteFiles(props.BucketManager, currentUser.UserID, post_id)
 
-		utils.GinApiResponse(c, 200, "", nil, nil)
+		utils.GinApiResponse(c, 200, nil, nil, nil)
 	})
 }
 
