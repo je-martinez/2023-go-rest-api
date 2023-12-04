@@ -1,11 +1,9 @@
 package post_handlers
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/je-martinez/2023-go-rest-api/pkg/bucket_manager"
 	"github.com/je-martinez/2023-go-rest-api/pkg/constants"
 	"github.com/je-martinez/2023-go-rest-api/pkg/database/entities"
 	auth_types "github.com/je-martinez/2023-go-rest-api/pkg/types/auth"
@@ -57,10 +55,4 @@ func DeletePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 
 		utils.GinApiResponse(c, 200, nil, nil, nil)
 	})
-}
-
-func handleDeleteFiles(bucketManager *bucket_manager.MinioApiInstance, bucketName string, postId string) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	bucketManager.DeleteFolder(ctx, bucketName, fmt.Sprintf("posts/%s", postId))
 }
