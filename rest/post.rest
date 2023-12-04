@@ -30,6 +30,21 @@ Content-Type: image/jpg
 < ./post-photo.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
+### Update Post with Files
+# @name updatePost
+@BaseURL=http://localhost:4500/api/v1
+@Token={{login.response.body.$.data.token}}
+@postToUpdate={{newPost.response.body.$.data.post_id}}
+PUT {{BaseURL}}/post/{{postToDelete}}
+Authorization: Bearer {{Token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="content"
+
+This an updated post description
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
 ### Delete Post with Files
 @postToDelete={{newPost.response.body.$.data.post_id}}
 DELETE {{BaseURL}}/post/{{postToDelete}}
