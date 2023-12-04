@@ -36,8 +36,8 @@ type UserDTO struct {
 func (i User) ToDTO() (input *UserDTO) {
 
 	var profile *ProfileDTO
-	var posts []PostDTO
-	var comments []CommentDTO
+	posts := []PostDTO{}
+	comments := []CommentDTO{}
 	if i.Profile != nil {
 		profile = i.Profile.ToDTO()
 	}

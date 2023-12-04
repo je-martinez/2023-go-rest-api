@@ -32,7 +32,8 @@ func UpdatePost(props *router_types.RouterHandlerProps) gin.HandlerFunc {
 		}
 
 		query := types.QueryOptions{
-			Query: entities.Post{PostID: post_id},
+			Query:    entities.Post{PostID: post_id},
+			Preloads: []string{"Comments", "Files", "Reactions"},
 		}
 
 		post, err, notFound := props.Database.PostRepository.Find(query)

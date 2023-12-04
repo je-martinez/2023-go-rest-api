@@ -30,9 +30,9 @@ type PostDTO struct {
 }
 
 func (i Post) ToDTO() *PostDTO {
-	var comments []CommentDTO
-	var files []FileDTO
-	var reactions []ReactionDTO
+	comments := []CommentDTO{}
+	files := []FileDTO{}
+	reactions := []ReactionDTO{}
 
 	if i.Comments != nil {
 		for _, comment := range i.Comments {
