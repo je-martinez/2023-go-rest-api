@@ -13,8 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var app *Server = (new(Server))
-
 type Server struct {
 	Router        *router.RouterApiInstance
 	Logger        *logger.ApiLogger
@@ -24,10 +22,12 @@ type Server struct {
 	BucketManager *bucket_manager.MinioApiInstance
 }
 
-func New(cfg *config.Config) *Server {
+func New() *Server {
+	cfg := config.InitConfig()
 	if !cfg.Server.Debug {
 		gin.SetMode(gin.ReleaseMode)
 	}
+	app := new(Server)
 	//Initialize Packages
 	app.Config = cfg
 	app.Logger = logger.New(cfg)
@@ -45,28 +45,4 @@ func New(cfg *config.Config) *Server {
 	app.Router.Start()
 	app.Logger.Infof(constants.API_RUNNING, cfg.Server.Port)
 	return app
-}
-
-func App() *Server {
-	return app
-}
-
-func Config() *config.Config {
-	return app.Config
-}
-
-func Database() *database.DatabaseApiInstance {
-	return app.Database
-}
-
-func Cache() *cache.RedisApiInstance {
-	return app.Cache
-}
-
-func Logger() *logger.ApiLogger {
-	return app.Logger
-}
-
-func BucketManager() *bucket_manager.MinioApiInstance {
-	return app.BucketManager
 }
