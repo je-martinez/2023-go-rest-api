@@ -3,6 +3,7 @@ package bucket_manager
 import (
 	"context"
 	"errors"
+	"log"
 	"mime/multipart"
 
 	"github.com/je-martinez/2023-go-rest-api/config"
@@ -88,6 +89,39 @@ func (m *MinioApiInstance) DeleteFile(ctx context.Context, bucketName string, ke
 		m.logger.Error(constants.DELETE_POST_FILE_ERR, err.Error())
 	}
 	return err
+}
+
+func (m *MinioApiInstance) DeleteFiles(ctx context.Context, bucketName string, prefix string, keysObject []string) error {
+
+	if !m.ValidateIfBucketExist(ctx, bucketName) {
+		return errors.New(constants.BUCKET_DOESNT_EXISTS)
+	}
+
+	objectsCh := make(chan minio.ObjectInfo)
+	// Send object names that are needed to be removed to objectsCh
+	go func() {
+		defer close(objectsCh)
+		// List all objects from a bucket-name with a matching prefix.
+		opts := minio.ListObjectsOptions{Prefix: prefix, Recursive: true}
+		for object := range m.client.ListObjects(context.Background(), bucketName, opts) {
+			if object.Err != nil {
+				log.Fatalln(object.Err)
+			}
+			for _, key := range keysObject {
+				if key == object.Key {
+					objectsCh <- object
+				}
+			}
+		}
+	}()
+
+	errorCh := m.client.RemoveObjects(context.Background(), bucketName, objectsCh, minio.RemoveObjectsOptions{})
+
+	for e := range errorCh {
+		return e.Err
+	}
+
+	return nil
 }
 
 func (m *MinioApiInstance) DeleteFolder(ctx context.Context, bucketName string, folderName string) error {

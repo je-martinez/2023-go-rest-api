@@ -49,3 +49,9 @@ func handleDeleteFiles(bucketManager *bucket_manager.MinioApiInstance, bucketNam
 	defer cancel()
 	bucketManager.DeleteFolder(ctx, bucketName, fmt.Sprintf("posts/%s", postId))
 }
+
+func handleDeleteFilesByKeys(bucketManager *bucket_manager.MinioApiInstance, bucketName string, postId string, keys []string) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	bucketManager.DeleteFiles(ctx, bucketName, postId, keys)
+}
